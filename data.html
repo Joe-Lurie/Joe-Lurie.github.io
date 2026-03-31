@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data – Joseph Lurie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #070b18;
@@ -14,212 +16,87 @@
             --accent-dim: rgba(59,130,246,0.12);
             --green: #22d3a0;
             --red: #f43f5e;
+            --yellow: #facc15;
             --text: #e2e8f0;
             --muted: #64748b;
             --mono: 'IBM Plex Mono', monospace;
             --sans: 'IBM Plex Sans', sans-serif;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: var(--sans);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        /* NAV */
-        .top-nav {
-            background: #151a30;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            border-bottom: 1px solid var(--border);
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-        }
-        .logo {
-            font-family: var(--mono);
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-right: 40px;
-            text-decoration: none;
-        }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+        .top-nav { background: #151a30; height: 60px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        .logo { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); margin-right: 40px; text-decoration: none; }
         .nav-links { display: flex; gap: 24px; margin-left: auto; }
-        .nav-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-
-        /* MAIN */
-        .main-content {
-            margin-top: 60px;
-            padding: 32px 24px;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
+        .main-content { margin-top: 60px; padding: 32px 24px; max-width: 1400px; margin-left: auto; margin-right: auto; }
         .page-header { margin-bottom: 32px; }
-        .page-title {
-            font-family: var(--mono);
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 6px;
-        }
+        .page-title { font-family: var(--mono); font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 6px; }
         .page-subtitle { font-size: 14px; color: var(--muted); }
-
-        .ticker-strip {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-        }
-        .ticker-btn {
-            font-family: var(--mono);
-            font-size: 13px;
-            font-weight: 700;
-            padding: 8px 18px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.15s;
-            letter-spacing: 0.5px;
-        }
+        .ticker-strip { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+        .ticker-btn { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 8px 18px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px; }
         .ticker-btn:hover { border-color: var(--accent); color: var(--text); }
-        .ticker-btn.active {
-            background: var(--accent-dim);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* STATUS */
-        .status-bar {
-            font-family: var(--mono);
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 20px;
-            min-height: 18px;
-        }
+        .ticker-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .status-bar { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 20px; min-height: 18px; }
         .status-bar .loading { color: var(--accent); }
-        .status-bar .error   { color: var(--red); }
-        .status-bar .ok      { color: var(--green); }
-
-        /* QUOTE CARD */
-        .quote-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 28px;
-            display: none;
-        }
+        .status-bar .error { color: var(--red); }
+        .status-bar .ok { color: var(--green); }
+        .quote-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 28px; display: none; }
         .quote-card.visible { display: block; }
-        .quote-top {
-            display: flex;
-            align-items: flex-start;
-            gap: 32px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .quote-symbol {
-            font-family: var(--mono);
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: -1px;
-        }
+        .quote-top { display: flex; align-items: flex-start; gap: 32px; margin-bottom: 20px; flex-wrap: wrap; }
+        .quote-symbol { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--accent); letter-spacing: -1px; }
         .quote-name { font-size: 14px; color: var(--muted); margin-top: 6px; }
-        .quote-price {
-            font-family: var(--mono);
-            font-size: 42px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            line-height: 1;
-        }
-        .quote-change {
-            font-family: var(--mono);
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 6px;
-        }
-        .quote-meta {
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-            border-top: 1px solid var(--border);
-            padding-top: 20px;
-        }
+        .quote-price { font-family: var(--mono); font-size: 42px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+        .quote-change { font-family: var(--mono); font-size: 16px; font-weight: 600; margin-top: 6px; }
+        .quote-meta { display: flex; gap: 32px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 20px; }
         .meta-item { display: flex; flex-direction: column; gap: 4px; }
         .meta-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
         .meta-value { font-family: var(--mono); font-size: 15px; font-weight: 600; }
-
-        /* TABLE */
-        .table-wrap {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow-x: auto;
-            display: none;
-        }
+        .analyze-btn { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 10px 22px; background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%); border: none; color: #fff; border-radius: 6px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
+        .analyze-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(59,130,246,0.35); }
+        .analyze-btn:active { transform: translateY(0); }
+        .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .analyze-btn .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+        .analyze-btn.loading .spinner { display: block; }
+        .analyze-btn .ai-icon { font-size: 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .ai-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 28px; display: none; overflow: hidden; }
+        .ai-panel.visible { display: block; animation: slideIn 0.35s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .ai-panel-header { display: flex; align-items: center; gap: 12px; padding: 18px 24px; border-bottom: 1px solid var(--border); background: rgba(59,130,246,0.04); }
+        .ai-panel-header .ai-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #a78bfa; background: rgba(167,139,250,0.12); padding: 4px 10px; border-radius: 4px; }
+        .ai-panel-header .ai-title { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); }
+        .ai-panel-close { margin-left: auto; background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.15s; line-height: 1; }
+        .ai-panel-close:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .ai-panel-body { padding: 24px; }
+        .signal-row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+        .signal-badge { font-family: var(--mono); font-size: 18px; font-weight: 700; letter-spacing: 1px; padding: 8px 20px; border-radius: 6px; text-transform: uppercase; }
+        .signal-badge.buy { background: rgba(34,211,160,0.12); color: var(--green); border: 1px solid rgba(34,211,160,0.3); }
+        .signal-badge.sell { background: rgba(244,63,94,0.12); color: var(--red); border: 1px solid rgba(244,63,94,0.3); }
+        .signal-badge.hold { background: rgba(250,204,21,0.12); color: var(--yellow); border: 1px solid rgba(250,204,21,0.3); }
+        .signal-conf { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+        .ai-summary { font-size: 14px; line-height: 1.75; color: var(--text); margin-bottom: 20px; }
+        .ai-factors { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .ai-factor { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; }
+        .ai-factor-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+        .ai-factor-value { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.5; }
+        .ai-disclaimer { font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 14px; margin-top: 8px; line-height: 1.6; font-style: italic; }
+        .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; display: none; }
         .table-wrap.visible { display: block; }
-        .table-title {
-            font-family: var(--mono);
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 16px 20px 0;
-        }
-
+        .table-title { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 16px 20px 0; }
         table { width: 100%; border-collapse: collapse; }
         thead { border-bottom: 1px solid var(--border-bright); }
-        th {
-            text-align: right;
-            padding: 12px 16px;
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            white-space: nowrap;
-        }
+        th { text-align: right; padding: 12px 16px; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
         th:first-child { text-align: left; }
-        td {
-            padding: 11px 16px;
-            font-family: var(--mono);
-            font-size: 13px;
-            border-bottom: 1px solid var(--border);
-            text-align: right;
-            white-space: nowrap;
-        }
+        td { padding: 11px 16px; font-family: var(--mono); font-size: 13px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
         td:first-child { text-align: left; color: var(--muted); }
         tbody tr:hover { background: rgba(59,130,246,0.04); }
         tbody tr:last-child td { border-bottom: none; }
-
-        .up   { color: var(--green); }
+        .up { color: var(--green); }
         .down { color: var(--red); }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--surface); }
-        ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
     </style>
 </head>
 <body>
-
 <nav class="top-nav">
     <a href="index.html" class="logo">Joseph Lurie</a>
     <div class="nav-links">
@@ -228,197 +105,221 @@
         <a href="data.html" class="active">Data</a>
     </div>
 </nav>
-
 <main class="main-content">
     <div class="page-header">
         <h1 class="page-title">Data</h1>
-        <p class="page-subtitle">Live market data via Alpha Vantage · Select a ticker to load</p>
+        <p class="page-subtitle">Live market data via Alpha Vantage · AI analysis powered by Claude · Select a ticker to load</p>
     </div>
-
     <div class="ticker-strip" id="tickerStrip"></div>
-
     <div class="status-bar" id="statusBar"></div>
-
     <div class="quote-card" id="quoteCard">
         <div class="quote-top">
             <div>
                 <div class="quote-symbol" id="qSymbol"></div>
-                <div class="quote-name"   id="qName"></div>
+                <div class="quote-name" id="qName"></div>
             </div>
             <div>
-                <div class="quote-price"  id="qPrice"></div>
+                <div class="quote-price" id="qPrice"></div>
                 <div class="quote-change" id="qChange"></div>
             </div>
+            <button class="analyze-btn" id="analyzeBtn" onclick="runAIAnalysis()">
+                <span class="ai-icon">✦</span>
+                <span class="btn-label">Analyze with AI</span>
+                <div class="spinner"></div>
+            </button>
         </div>
         <div class="quote-meta" id="qMeta"></div>
     </div>
-
+    <div class="ai-panel" id="aiPanel">
+        <div class="ai-panel-header">
+            <span class="ai-badge">AI Analysis</span>
+            <span class="ai-title" id="aiTitle"></span>
+            <button class="ai-panel-close" onclick="closeAI()">&times;</button>
+        </div>
+        <div class="ai-panel-body" id="aiBody"></div>
+    </div>
     <div class="table-wrap" id="tableWrap">
         <div class="table-title" id="tableTitle"></div>
         <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Open</th>
-                    <th>High</th>
-                    <th>Low</th>
-                    <th>Close</th>
-                    <th>Volume</th>
-                    <th>Change</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Date</th><th>Open</th><th>High</th><th>Low</th><th>Close</th><th>Volume</th><th>Change</th></tr></thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
 </main>
-
 <script>
-    const API_KEY = '0PYR9XJ22Q2SWHY1';
+    // No API keys in client code! Everything routes through the Cloudflare Worker.
+    const WORKER_URL = 'https://ai-proxy2.jlurie0626.workers.dev';
 
     const TICKERS = [
-        { symbol: 'LMT',  name: 'Lockheed Martin'        },
-        { symbol: 'NOC',  name: 'Northrop Grumman'       },
-        { symbol: 'RTX',  name: 'RTX Corporation'         },
-        { symbol: 'GD',   name: 'General Dynamics'        },
-        { symbol: 'BA',   name: 'Boeing'                  },
-        { symbol: 'GE',   name: 'GE Aerospace'            },
-        { symbol: 'LHX',  name: 'L3Harris Technologies'   },
-        { symbol: 'KTOS', name: 'Kratos Defense'          },
-        { symbol: 'AVAV', name: 'AeroVironment'           },
-        { symbol: 'RKLB', name: 'Rocket Lab'              },
+        { symbol: 'LMT',  name: 'Lockheed Martin' },
+        { symbol: 'NOC',  name: 'Northrop Grumman' },
+        { symbol: 'RTX',  name: 'RTX Corporation' },
+        { symbol: 'GD',   name: 'General Dynamics' },
+        { symbol: 'BA',   name: 'Boeing' },
+        { symbol: 'GE',   name: 'GE Aerospace' },
+        { symbol: 'LHX',  name: 'L3Harris Technologies' },
+        { symbol: 'KTOS', name: 'Kratos Defense' },
+        { symbol: 'AVAV', name: 'AeroVironment' },
+        { symbol: 'RKLB', name: 'Rocket Lab' },
     ];
 
-    const strip     = document.getElementById('tickerStrip');
+    const strip = document.getElementById('tickerStrip');
     const statusBar = document.getElementById('statusBar');
     const quoteCard = document.getElementById('quoteCard');
     const tableWrap = document.getElementById('tableWrap');
     const tableBody = document.getElementById('tableBody');
+    const aiPanel = document.getElementById('aiPanel');
+    const aiBody = document.getElementById('aiBody');
 
     let activeSymbol = null;
+    let currentStockData = null;
 
     TICKERS.forEach(t => {
         const btn = document.createElement('button');
-        btn.className    = 'ticker-btn';
-        btn.textContent  = t.symbol;
+        btn.className = 'ticker-btn';
+        btn.textContent = t.symbol;
         btn.dataset.symbol = t.symbol;
         btn.addEventListener('click', () => loadStock(t.symbol, t.name, btn));
         strip.appendChild(btn);
     });
 
-    function setStatus(msg, type = '') {
-        statusBar.innerHTML = `<span class="${type}">${msg}</span>`;
-    }
+    function setStatus(msg, type = '') { statusBar.innerHTML = '<span class="' + type + '">' + msg + '</span>'; }
+    function fmt(n, dec = 2) { return Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
+    function fmtVol(v) { const n = Number(v); if (n >= 1e6) return (n/1e6).toFixed(2)+'M'; if (n >= 1e3) return (n/1e3).toFixed(1)+'K'; return n.toLocaleString(); }
+    function closeAI() { aiPanel.classList.remove('visible'); }
 
-    function fmt(n, dec = 2) {
-        return Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-    }
+    async function runAIAnalysis() {
+        if (!currentStockData) return;
+        const btn = document.getElementById('analyzeBtn');
+        btn.classList.add('loading');
+        btn.querySelector('.btn-label').textContent = 'Analyzing…';
+        btn.disabled = true;
+        aiPanel.classList.remove('visible');
 
-    function fmtVol(v) {
-        const n = Number(v);
-        if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
-        if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
-        return n.toLocaleString();
+        const { symbol, name, series, dates } = currentStockData;
+        const recentDays = dates.slice(0, 20);
+        const priceSummary = recentDays.map(d => {
+            const row = series[d];
+            return d+': O='+row['1. open']+' H='+row['2. high']+' L='+row['3. low']+' C='+row['4. close']+' V='+row['5. volume'];
+        }).join('\n');
+
+        const latestClose = parseFloat(series[dates[0]]['4. close']);
+        const oldest20Close = parseFloat(series[recentDays[recentDays.length-1]]['4. close']);
+        const trendPct = ((latestClose - oldest20Close) / oldest20Close * 100).toFixed(2);
+        const closes20 = recentDays.map(d => parseFloat(series[d]['4. close']));
+        const avg20 = (closes20.reduce((a,b) => a+b, 0) / closes20.length).toFixed(2);
+        const high20 = Math.max(...closes20).toFixed(2);
+        const low20 = Math.min(...closes20).toFixed(2);
+        const volumes20 = recentDays.map(d => parseInt(series[d]['5. volume']));
+        const avgVol = Math.round(volumes20.reduce((a,b) => a+b, 0) / volumes20.length);
+
+        const prompt = 'You are a stock market analyst. Analyze the following stock data and provide a recommendation.\n\nStock: '+symbol+' ('+name+')\nLatest Price: $'+latestClose.toFixed(2)+'\n20-Day Trend: '+trendPct+'%\n20-Day Avg Price: $'+avg20+'\n20-Day High: $'+high20+'\n20-Day Low: $'+low20+'\n20-Day Avg Volume: '+avgVol.toLocaleString()+'\nTotal Data Points: '+dates.length+' trading days\n\nRecent 20-day price history (most recent first):\n'+priceSummary+'\n\nRespond ONLY with a JSON object (no markdown, no backticks, no preamble) in this exact format:\n{"signal": "BUY" or "SELL" or "HOLD", "confidence": "High" or "Medium" or "Low", "summary": "2-3 sentence overall analysis", "factors": [{"label": "Price Trend", "detail": "brief detail"}, {"label": "Momentum", "detail": "brief detail"}, {"label": "Volume", "detail": "brief detail"}, {"label": "Risk Level", "detail": "brief detail"}]}';
+
+        try {
+            const response = await fetch(WORKER_URL + '/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
+            });
+            const data = await response.json();
+            const text = data.content.map(c => c.text || '').join('');
+            const clean = text.replace(/```json|```/g, '').trim();
+            const analysis = JSON.parse(clean);
+            const signalClass = analysis.signal.toLowerCase();
+            document.getElementById('aiTitle').textContent = symbol + ' — ' + name;
+            aiBody.innerHTML = '<div class="signal-row"><div class="signal-badge '+signalClass+'">'+analysis.signal+'</div><div class="signal-conf">Confidence: '+analysis.confidence+'</div></div><div class="ai-summary">'+analysis.summary+'</div><div class="ai-factors">'+analysis.factors.map(f => '<div class="ai-factor"><div class="ai-factor-label">'+f.label+'</div><div class="ai-factor-value">'+f.detail+'</div></div>').join('')+'</div><div class="ai-disclaimer">⚠ This analysis is generated by AI (Claude) based on recent price data only. It is not financial advice. Always do your own research and consult a qualified financial advisor before making investment decisions.</div>';
+            aiPanel.classList.add('visible');
+        } catch (err) {
+            aiBody.innerHTML = '<div style="padding:8px 0;color:var(--red);font-family:var(--mono);font-size:13px;">Error: '+err.message+'</div><div class="ai-disclaimer">The AI analysis service may be temporarily unavailable. Please try again.</div>';
+            aiPanel.classList.add('visible');
+            document.getElementById('aiTitle').textContent = symbol + ' — Error';
+        } finally {
+            btn.classList.remove('loading');
+            btn.querySelector('.btn-label').textContent = 'Analyze with AI';
+            btn.disabled = false;
+        }
     }
 
     async function loadStock(symbol, name, btn) {
         if (activeSymbol === symbol) return;
         activeSymbol = symbol;
-
+        currentStockData = null;
         document.querySelectorAll('.ticker-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
         quoteCard.classList.remove('visible');
         tableWrap.classList.remove('visible');
-        setStatus(`Fetching ${symbol}…`, 'loading');
+        aiPanel.classList.remove('visible');
+        setStatus('Fetching '+symbol+'…', 'loading');
 
         try {
-            const url  = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&apikey=${API_KEY}`;
-            const res  = await fetch(url);
+            const url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + symbol + '&outputsize=compact&apikey=0PYR9XJ22Q2SWHY1';
+            const res = await fetch(url);
             const data = await res.json();
 
             if (data['Note'] || data['Information']) {
                 setStatus('API rate limit reached. Try again later.', 'error');
-                activeSymbol = null;
-                btn.classList.remove('active');
-                return;
+                activeSymbol = null; btn.classList.remove('active'); return;
             }
 
-            const meta   = data['Meta Data'];
+            const meta = data['Meta Data'];
             const series = data['Time Series (Daily)'];
             if (!series) throw new Error('Unexpected API response');
 
-            const dates     = Object.keys(series).sort((a, b) => b.localeCompare(a));
-            const latest    = series[dates[0]];
-            const prev      = series[dates[1]];
-            const close     = parseFloat(latest['4. close']);
+            const dates = Object.keys(series).sort((a,b) => b.localeCompare(a));
+            const latest = series[dates[0]];
+            const prev = series[dates[1]];
+            const close = parseFloat(latest['4. close']);
             const prevClose = parseFloat(prev['4. close']);
-            const change    = close - prevClose;
+            const change = close - prevClose;
             const changePct = (change / prevClose) * 100;
-            const isUp      = change >= 0;
+            const isUp = change >= 0;
+
+            currentStockData = { symbol, name, series, dates };
 
             document.getElementById('qSymbol').textContent = symbol;
-            document.getElementById('qName').textContent   = name;
-            document.getElementById('qPrice').textContent  = '$' + fmt(close);
+            document.getElementById('qName').textContent = name;
+            document.getElementById('qPrice').textContent = '$' + fmt(close);
 
             const changeEl = document.getElementById('qChange');
-            changeEl.textContent = `${isUp ? '+' : ''}${fmt(change)} (${isUp ? '+' : ''}${fmt(changePct)}%)`;
-            changeEl.className   = 'quote-change ' + (isUp ? 'up' : 'down');
+            changeEl.textContent = (isUp?'+':'') + fmt(change) + ' (' + (isUp?'+':'') + fmt(changePct) + '%)';
+            changeEl.className = 'quote-change ' + (isUp ? 'up' : 'down');
 
             document.getElementById('qMeta').innerHTML = [
-                { label: 'Open',         value: '$' + fmt(latest['1. open'])  },
-                { label: 'High',         value: '$' + fmt(latest['2. high'])  },
-                { label: 'Low',          value: '$' + fmt(latest['3. low'])   },
-                { label: 'Volume',       value: fmtVol(latest['5. volume'])   },
-                { label: 'Last Updated', value: dates[0]                      },
-                { label: 'Data Points',  value: dates.length + ' days'        },
-            ].map(f => `
-                <div class="meta-item">
-                    <span class="meta-label">${f.label}</span>
-                    <span class="meta-value">${f.value}</span>
-                </div>
-            `).join('');
+                { label: 'Open', value: '$'+fmt(latest['1. open']) },
+                { label: 'High', value: '$'+fmt(latest['2. high']) },
+                { label: 'Low', value: '$'+fmt(latest['3. low']) },
+                { label: 'Volume', value: fmtVol(latest['5. volume']) },
+                { label: 'Last Updated', value: dates[0] },
+                { label: 'Data Points', value: dates.length+' days' },
+            ].map(f => '<div class="meta-item"><span class="meta-label">'+f.label+'</span><span class="meta-value">'+f.value+'</span></div>').join('');
 
             quoteCard.classList.add('visible');
-
-            document.getElementById('tableTitle').textContent = `${symbol} · Daily Price History`;
+            document.getElementById('tableTitle').textContent = symbol + ' · Daily Price History';
             tableBody.innerHTML = '';
 
             dates.forEach((date, i) => {
-                const row   = series[date];
-                const c     = parseFloat(row['4. close']);
+                const row = series[date];
+                const c = parseFloat(row['4. close']);
                 let dayChange = '', dayClass = '';
-
                 if (i < dates.length - 1) {
-                    const prevC = parseFloat(series[dates[i + 1]]['4. close']);
-                    const diff  = c - prevC;
-                    const pct   = (diff / prevC) * 100;
-                    dayClass    = diff >= 0 ? 'up' : 'down';
-                    dayChange   = `${diff >= 0 ? '+' : ''}${fmt(diff)} (${diff >= 0 ? '+' : ''}${fmt(pct)}%)`;
+                    const prevC = parseFloat(series[dates[i+1]]['4. close']);
+                    const diff = c - prevC;
+                    const pct = (diff / prevC) * 100;
+                    dayClass = diff >= 0 ? 'up' : 'down';
+                    dayChange = (diff>=0?'+':'') + fmt(diff) + ' (' + (diff>=0?'+':'') + fmt(pct) + '%)';
                 }
-
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${date}</td>
-                    <td>$${fmt(row['1. open'])}</td>
-                    <td>$${fmt(row['2. high'])}</td>
-                    <td>$${fmt(row['3. low'])}</td>
-                    <td>$${fmt(c)}</td>
-                    <td>${fmtVol(row['5. volume'])}</td>
-                    <td class="${dayClass}">${dayChange}</td>
-                `;
+                tr.innerHTML = '<td>'+date+'</td><td>$'+fmt(row['1. open'])+'</td><td>$'+fmt(row['2. high'])+'</td><td>$'+fmt(row['3. low'])+'</td><td>$'+fmt(c)+'</td><td>'+fmtVol(row['5. volume'])+'</td><td class="'+dayClass+'">'+dayChange+'</td>';
                 tableBody.appendChild(tr);
             });
 
             tableWrap.classList.add('visible');
-            setStatus(`✓ ${symbol} loaded · ${dates.length} trading days · last updated ${meta['3. Last Refreshed']}`, 'ok');
-
+            setStatus('✓ '+symbol+' loaded · '+dates.length+' trading days · last updated '+meta['3. Last Refreshed'], 'ok');
         } catch (err) {
-            setStatus('Error: ' + err.message, 'error');
-            activeSymbol = null;
-            btn.classList.remove('active');
+            setStatus('Error: '+err.message, 'error');
+            activeSymbol = null; btn.classList.remove('active');
         }
     }
 </script>
-
 </body>
 </html>
