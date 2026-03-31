@@ -147,7 +147,7 @@
     </div>
 </main>
 <script>
-    // No API keys in client code! Everything routes through the Cloudflare Worker.
+    // All API calls go through your Cloudflare Worker — no keys exposed here
     const WORKER_URL = 'https://ai-proxy2.jlurie0626.workers.dev';
 
     const TICKERS = [
@@ -219,7 +219,11 @@
             const response = await fetch(WORKER_URL + '/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-6',   // ← fixed model name
+                    max_tokens: 1000,
+                    messages: [{ role: 'user', content: prompt }]
+                })
             });
             const data = await response.json();
             const text = data.content.map(c => c.text || '').join('');
@@ -252,7 +256,8 @@
         setStatus('Fetching '+symbol+'…', 'loading');
 
         try {
-            const url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + symbol + '&outputsize=compact&apikey=5YJCCIC4V6BW3M90';
+            // ← now routes through your Worker, not directly to Alpha Vantage
+            const url = WORKER_URL + '/stock?symbol=' + symbol;
             const res = await fetch(url);
             const data = await res.json();
 
