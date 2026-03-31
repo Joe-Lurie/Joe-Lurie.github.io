@@ -215,18 +215,18 @@
 
         const prompt = 'You are a stock market analyst. Analyze the following stock data and provide a recommendation.\n\nStock: '+symbol+' ('+name+')\nLatest Price: $'+latestClose.toFixed(2)+'\n20-Day Trend: '+trendPct+'%\n20-Day Avg Price: $'+avg20+'\n20-Day High: $'+high20+'\n20-Day Low: $'+low20+'\n20-Day Avg Volume: '+avgVol.toLocaleString()+'\nTotal Data Points: '+dates.length+' trading days\n\nRecent 20-day price history (most recent first):\n'+priceSummary+'\n\nRespond ONLY with a JSON object (no markdown, no backticks, no preamble) in this exact format:\n{"signal": "BUY" or "SELL" or "HOLD", "confidence": "High" or "Medium" or "Low", "summary": "2-3 sentence overall analysis", "factors": [{"label": "Price Trend", "detail": "brief detail"}, {"label": "Momentum", "detail": "brief detail"}, {"label": "Volume", "detail": "brief detail"}, {"label": "Risk Level", "detail": "brief detail"}]}';
 
-        try {
-            const response = await fetch(WORKER_URL + '/analyze', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    model: 'claude-sonnet-4-6',   // ← fixed model name
-                    max_tokens: 1000,
-                    messages: [{ role: 'user', content: prompt }]
-                })
-            });
-            const data = await response.json();
-            const text = data.content.map(c => c.text || '').join('');
+       try {
+    const response = await fetch('http://localhost:11434/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: 'qwen2.5',
+            prompt: prompt,
+            stream: false
+        })
+    });
+    const data = await response.json();
+    const text = data.response || '';
             const clean = text.replace(/```json|```/g, '').trim();
             const analysis = JSON.parse(clean);
             const signalClass = analysis.signal.toLowerCase();
