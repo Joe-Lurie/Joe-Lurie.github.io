@@ -123,7 +123,7 @@
                 <div class="quote-change" id="qChange"></div>
             </div>
             <button class="analyze-btn" id="analyzeBtn" onclick="runAIAnalysis()">
-                <span class="ai-icon">✦</span>
+                <span class="ai-icon">&#10022;</span>
                 <span class="btn-label">Analyze with AI</span>
                 <div class="spinner"></div>
             </button>
@@ -147,10 +147,9 @@
     </div>
 </main>
 <script>
-    // All API calls go through your Cloudflare Worker — no keys exposed here
-    const WORKER_URL = 'https://ai-proxy2.jlurie0626.workers.dev';
+    var WORKER_URL = 'https://ai-proxy2.jlurie0626.workers.dev';
 
-    const TICKERS = [
+    var TICKERS = [
         { symbol: 'LMT',  name: 'Lockheed Martin' },
         { symbol: 'NOC',  name: 'Northrop Grumman' },
         { symbol: 'RTX',  name: 'RTX Corporation' },
@@ -160,83 +159,147 @@
         { symbol: 'LHX',  name: 'L3Harris Technologies' },
         { symbol: 'KTOS', name: 'Kratos Defense' },
         { symbol: 'AVAV', name: 'AeroVironment' },
-        { symbol: 'RKLB', name: 'Rocket Lab' },
+        { symbol: 'RKLB', name: 'Rocket Lab' }
     ];
 
-    const strip = document.getElementById('tickerStrip');
-    const statusBar = document.getElementById('statusBar');
-    const quoteCard = document.getElementById('quoteCard');
-    const tableWrap = document.getElementById('tableWrap');
-    const tableBody = document.getElementById('tableBody');
-    const aiPanel = document.getElementById('aiPanel');
-    const aiBody = document.getElementById('aiBody');
+    var strip = document.getElementById('tickerStrip');
+    var statusBar = document.getElementById('statusBar');
+    var quoteCard = document.getElementById('quoteCard');
+    var tableWrap = document.getElementById('tableWrap');
+    var tableBody = document.getElementById('tableBody');
+    var aiPanel = document.getElementById('aiPanel');
+    var aiBody = document.getElementById('aiBody');
 
-    let activeSymbol = null;
-    let currentStockData = null;
+    var activeSymbol = null;
+    var currentStockData = null;
 
-    TICKERS.forEach(t => {
-        const btn = document.createElement('button');
+    TICKERS.forEach(function(t) {
+        var btn = document.createElement('button');
         btn.className = 'ticker-btn';
         btn.textContent = t.symbol;
         btn.dataset.symbol = t.symbol;
-        btn.addEventListener('click', () => loadStock(t.symbol, t.name, btn));
+        btn.addEventListener('click', function() { loadStock(t.symbol, t.name, btn); });
         strip.appendChild(btn);
     });
 
-    function setStatus(msg, type = '') { statusBar.innerHTML = '<span class="' + type + '">' + msg + '</span>'; }
-    function fmt(n, dec = 2) { return Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
-    function fmtVol(v) { const n = Number(v); if (n >= 1e6) return (n/1e6).toFixed(2)+'M'; if (n >= 1e3) return (n/1e3).toFixed(1)+'K'; return n.toLocaleString(); }
-    function closeAI() { aiPanel.classList.remove('visible'); }
+    function setStatus(msg, type) {
+        statusBar.innerHTML = '<span class="' + (type || '') + '">' + msg + '</span>';
+    }
+
+    function fmt(n, dec) {
+        dec = dec || 2;
+        return Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    }
+
+    function fmtVol(v) {
+        var n = Number(v);
+        if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+        if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+        return n.toLocaleString();
+    }
+
+    function closeAI() {
+        aiPanel.classList.remove('visible');
+    }
 
     async function runAIAnalysis() {
         if (!currentStockData) return;
-        const btn = document.getElementById('analyzeBtn');
+
+        var btn = document.getElementById('analyzeBtn');
         btn.classList.add('loading');
-        btn.querySelector('.btn-label').textContent = 'Analyzing…';
+        btn.querySelector('.btn-label').textContent = 'Analyzing\u2026';
         btn.disabled = true;
         aiPanel.classList.remove('visible');
 
-        const { symbol, name, series, dates } = currentStockData;
-        const recentDays = dates.slice(0, 20);
-        const priceSummary = recentDays.map(d => {
-            const row = series[d];
-            return d+': O='+row['1. open']+' H='+row['2. high']+' L='+row['3. low']+' C='+row['4. close']+' V='+row['5. volume'];
+        var symbol = currentStockData.symbol;
+        var name = currentStockData.name;
+        var series = currentStockData.series;
+        var dates = currentStockData.dates;
+
+        var recentDays = dates.slice(0, 20);
+        var priceSummary = recentDays.map(function(d) {
+            var row = series[d];
+            return d + ': O=' + row['1. open'] + ' H=' + row['2. high'] + ' L=' + row['3. low'] + ' C=' + row['4. close'] + ' V=' + row['5. volume'];
         }).join('\n');
 
-        const latestClose = parseFloat(series[dates[0]]['4. close']);
-        const oldest20Close = parseFloat(series[recentDays[recentDays.length-1]]['4. close']);
-        const trendPct = ((latestClose - oldest20Close) / oldest20Close * 100).toFixed(2);
-        const closes20 = recentDays.map(d => parseFloat(series[d]['4. close']));
-        const avg20 = (closes20.reduce((a,b) => a+b, 0) / closes20.length).toFixed(2);
-        const high20 = Math.max(...closes20).toFixed(2);
-        const low20 = Math.min(...closes20).toFixed(2);
-        const volumes20 = recentDays.map(d => parseInt(series[d]['5. volume']));
-        const avgVol = Math.round(volumes20.reduce((a,b) => a+b, 0) / volumes20.length);
+        var latestClose = parseFloat(series[dates[0]]['4. close']);
+        var oldest20Close = parseFloat(series[recentDays[recentDays.length - 1]]['4. close']);
+        var trendPct = ((latestClose - oldest20Close) / oldest20Close * 100).toFixed(2);
+        var closes20 = recentDays.map(function(d) { return parseFloat(series[d]['4. close']); });
+        var avg20 = (closes20.reduce(function(a, b) { return a + b; }, 0) / closes20.length).toFixed(2);
+        var high20 = Math.max.apply(null, closes20).toFixed(2);
+        var low20 = Math.min.apply(null, closes20).toFixed(2);
+        var volumes20 = recentDays.map(function(d) { return parseInt(series[d]['5. volume']); });
+        var avgVol = Math.round(volumes20.reduce(function(a, b) { return a + b; }, 0) / volumes20.length);
 
-        const prompt = 'You are a stock market analyst. Analyze the following stock data and provide a recommendation.\n\nStock: '+symbol+' ('+name+')\nLatest Price: $'+latestClose.toFixed(2)+'\n20-Day Trend: '+trendPct+'%\n20-Day Avg Price: $'+avg20+'\n20-Day High: $'+high20+'\n20-Day Low: $'+low20+'\n20-Day Avg Volume: '+avgVol.toLocaleString()+'\nTotal Data Points: '+dates.length+' trading days\n\nRecent 20-day price history (most recent first):\n'+priceSummary+'\n\nRespond ONLY with a JSON object (no markdown, no backticks, no preamble) in this exact format:\n{"signal": "BUY" or "SELL" or "HOLD", "confidence": "High" or "Medium" or "Low", "summary": "2-3 sentence overall analysis", "factors": [{"label": "Price Trend", "detail": "brief detail"}, {"label": "Momentum", "detail": "brief detail"}, {"label": "Volume", "detail": "brief detail"}, {"label": "Risk Level", "detail": "brief detail"}]}';
+        var prompt = 'You are a stock market analyst. Analyze the following stock data and provide a recommendation.\n\n' +
+            'Stock: ' + symbol + ' (' + name + ')\n' +
+            'Latest Price: $' + latestClose.toFixed(2) + '\n' +
+            '20-Day Trend: ' + trendPct + '%\n' +
+            '20-Day Avg Price: $' + avg20 + '\n' +
+            '20-Day High: $' + high20 + '\n' +
+            '20-Day Low: $' + low20 + '\n' +
+            '20-Day Avg Volume: ' + avgVol.toLocaleString() + '\n' +
+            'Total Data Points: ' + dates.length + ' trading days\n\n' +
+            'Recent 20-day price history (most recent first):\n' + priceSummary + '\n\n' +
+            'Respond ONLY with a JSON object (no markdown, no backticks, no preamble) in this exact format:\n' +
+            '{"signal": "BUY" or "SELL" or "HOLD", "confidence": "High" or "Medium" or "Low", "summary": "2-3 sentence overall analysis", "factors": [{"label": "Price Trend", "detail": "brief detail"}, {"label": "Momentum", "detail": "brief detail"}, {"label": "Volume", "detail": "brief detail"}, {"label": "Risk Level", "detail": "brief detail"}]}';
 
-       try {
-    const response = await fetch('http://localhost:11434/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            model: 'qwen2.5',
-            prompt: prompt,
-            stream: false
-        })
-    });
-    const data = await response.json();
-    const text = data.response || '';
-            const clean = text.replace(/```json|```/g, '').trim();
-            const analysis = JSON.parse(clean);
-            const signalClass = analysis.signal.toLowerCase();
-            document.getElementById('aiTitle').textContent = symbol + ' — ' + name;
-            aiBody.innerHTML = '<div class="signal-row"><div class="signal-badge '+signalClass+'">'+analysis.signal+'</div><div class="signal-conf">Confidence: '+analysis.confidence+'</div></div><div class="ai-summary">'+analysis.summary+'</div><div class="ai-factors">'+analysis.factors.map(f => '<div class="ai-factor"><div class="ai-factor-label">'+f.label+'</div><div class="ai-factor-value">'+f.detail+'</div></div>').join('')+'</div><div class="ai-disclaimer">⚠ This analysis is generated by AI (Claude) based on recent price data only. It is not financial advice. Always do your own research and consult a qualified financial advisor before making investment decisions.</div>';
+        try {
+            var response = await fetch(WORKER_URL + '/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 1000,
+                    messages: [{ role: 'user', content: prompt }]
+                })
+            });
+
+            var data = await response.json();
+
+            // Show the actual error from Anthropic if there is one
+            if (data.error) {
+                throw new Error(data.error.message || JSON.stringify(data.error));
+            }
+            if (!data.content) {
+                throw new Error('Unexpected response: ' + JSON.stringify(data).substring(0, 200));
+            }
+
+            var text = data.content.map(function(c) { return c.text || ''; }).join('');
+            var clean = text.replace(/```json|```/g, '').trim();
+            var analysis = JSON.parse(clean);
+            var signalClass = analysis.signal.toLowerCase();
+
+            document.getElementById('aiTitle').textContent = symbol + ' \u2014 ' + name;
+
+            aiBody.innerHTML =
+                '<div class="signal-row">' +
+                    '<div class="signal-badge ' + signalClass + '">' + analysis.signal + '</div>' +
+                    '<div class="signal-conf">Confidence: ' + analysis.confidence + '</div>' +
+                '</div>' +
+                '<div class="ai-summary">' + analysis.summary + '</div>' +
+                '<div class="ai-factors">' +
+                    analysis.factors.map(function(f) {
+                        return '<div class="ai-factor">' +
+                            '<div class="ai-factor-label">' + f.label + '</div>' +
+                            '<div class="ai-factor-value">' + f.detail + '</div>' +
+                        '</div>';
+                    }).join('') +
+                '</div>' +
+                '<div class="ai-disclaimer">' +
+                    '\u26A0 This analysis is generated by AI (Claude) based on recent price data only. It is not financial advice. ' +
+                    'Always do your own research and consult a qualified financial advisor before making investment decisions.' +
+                '</div>';
+
             aiPanel.classList.add('visible');
+
         } catch (err) {
-            aiBody.innerHTML = '<div style="padding:8px 0;color:var(--red);font-family:var(--mono);font-size:13px;">Error: '+err.message+'</div><div class="ai-disclaimer">The AI analysis service may be temporarily unavailable. Please try again.</div>';
+            document.getElementById('aiTitle').textContent = symbol + ' \u2014 Error';
+            aiBody.innerHTML =
+                '<div style="padding:8px 0;color:var(--red);font-family:var(--mono);font-size:13px;">Error: ' + err.message + '</div>' +
+                '<div class="ai-disclaimer">The AI analysis service may be temporarily unavailable. Please try again.</div>';
             aiPanel.classList.add('visible');
-            document.getElementById('aiTitle').textContent = symbol + ' — Error';
         } finally {
             btn.classList.remove('loading');
             btn.querySelector('.btn-label').textContent = 'Analyze with AI';
@@ -248,81 +311,88 @@
         if (activeSymbol === symbol) return;
         activeSymbol = symbol;
         currentStockData = null;
-        document.querySelectorAll('.ticker-btn').forEach(b => b.classList.remove('active'));
+
+        document.querySelectorAll('.ticker-btn').forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
         quoteCard.classList.remove('visible');
         tableWrap.classList.remove('visible');
         aiPanel.classList.remove('visible');
-        setStatus('Fetching '+symbol+'…', 'loading');
+        setStatus('Fetching ' + symbol + '\u2026', 'loading');
 
         try {
-            // ← now routes through your Worker, not directly to Alpha Vantage
-            const url = WORKER_URL + '/stock?symbol=' + symbol;
-            const res = await fetch(url);
-            const data = await res.json();
+            var url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + symbol + '&outputsize=compact&apikey=5YJCCIC4V6BW3M90';
+            var res = await fetch(url);
+            var data = await res.json();
 
             if (data['Note'] || data['Information']) {
                 setStatus('API rate limit reached. Try again later.', 'error');
-                activeSymbol = null; btn.classList.remove('active'); return;
+                activeSymbol = null;
+                btn.classList.remove('active');
+                return;
             }
 
-            const meta = data['Meta Data'];
-            const series = data['Time Series (Daily)'];
+            var meta = data['Meta Data'];
+            var series = data['Time Series (Daily)'];
             if (!series) throw new Error('Unexpected API response');
 
-            const dates = Object.keys(series).sort((a,b) => b.localeCompare(a));
-            const latest = series[dates[0]];
-            const prev = series[dates[1]];
-            const close = parseFloat(latest['4. close']);
-            const prevClose = parseFloat(prev['4. close']);
-            const change = close - prevClose;
-            const changePct = (change / prevClose) * 100;
-            const isUp = change >= 0;
+            var dates = Object.keys(series).sort(function(a, b) { return b.localeCompare(a); });
+            var latest = series[dates[0]];
+            var prev = series[dates[1]];
+            var close = parseFloat(latest['4. close']);
+            var prevClose = parseFloat(prev['4. close']);
+            var change = close - prevClose;
+            var changePct = (change / prevClose) * 100;
+            var isUp = change >= 0;
 
-            currentStockData = { symbol, name, series, dates };
+            currentStockData = { symbol: symbol, name: name, series: series, dates: dates };
 
             document.getElementById('qSymbol').textContent = symbol;
             document.getElementById('qName').textContent = name;
             document.getElementById('qPrice').textContent = '$' + fmt(close);
 
-            const changeEl = document.getElementById('qChange');
-            changeEl.textContent = (isUp?'+':'') + fmt(change) + ' (' + (isUp?'+':'') + fmt(changePct) + '%)';
+            var changeEl = document.getElementById('qChange');
+            changeEl.textContent = (isUp ? '+' : '') + fmt(change) + ' (' + (isUp ? '+' : '') + fmt(changePct) + '%)';
             changeEl.className = 'quote-change ' + (isUp ? 'up' : 'down');
 
             document.getElementById('qMeta').innerHTML = [
-                { label: 'Open', value: '$'+fmt(latest['1. open']) },
-                { label: 'High', value: '$'+fmt(latest['2. high']) },
-                { label: 'Low', value: '$'+fmt(latest['3. low']) },
+                { label: 'Open', value: '$' + fmt(latest['1. open']) },
+                { label: 'High', value: '$' + fmt(latest['2. high']) },
+                { label: 'Low', value: '$' + fmt(latest['3. low']) },
                 { label: 'Volume', value: fmtVol(latest['5. volume']) },
                 { label: 'Last Updated', value: dates[0] },
-                { label: 'Data Points', value: dates.length+' days' },
-            ].map(f => '<div class="meta-item"><span class="meta-label">'+f.label+'</span><span class="meta-value">'+f.value+'</span></div>').join('');
+                { label: 'Data Points', value: dates.length + ' days' }
+            ].map(function(f) {
+                return '<div class="meta-item"><span class="meta-label">' + f.label + '</span><span class="meta-value">' + f.value + '</span></div>';
+            }).join('');
 
             quoteCard.classList.add('visible');
-            document.getElementById('tableTitle').textContent = symbol + ' · Daily Price History';
+            document.getElementById('tableTitle').textContent = symbol + ' \u00B7 Daily Price History';
             tableBody.innerHTML = '';
 
-            dates.forEach((date, i) => {
-                const row = series[date];
-                const c = parseFloat(row['4. close']);
-                let dayChange = '', dayClass = '';
+            dates.forEach(function(date, i) {
+                var row = series[date];
+                var c = parseFloat(row['4. close']);
+                var dayChange = '';
+                var dayClass = '';
                 if (i < dates.length - 1) {
-                    const prevC = parseFloat(series[dates[i+1]]['4. close']);
-                    const diff = c - prevC;
-                    const pct = (diff / prevC) * 100;
+                    var prevC = parseFloat(series[dates[i + 1]]['4. close']);
+                    var diff = c - prevC;
+                    var pct = (diff / prevC) * 100;
                     dayClass = diff >= 0 ? 'up' : 'down';
-                    dayChange = (diff>=0?'+':'') + fmt(diff) + ' (' + (diff>=0?'+':'') + fmt(pct) + '%)';
+                    dayChange = (diff >= 0 ? '+' : '') + fmt(diff) + ' (' + (diff >= 0 ? '+' : '') + fmt(pct) + '%)';
                 }
-                const tr = document.createElement('tr');
-                tr.innerHTML = '<td>'+date+'</td><td>$'+fmt(row['1. open'])+'</td><td>$'+fmt(row['2. high'])+'</td><td>$'+fmt(row['3. low'])+'</td><td>$'+fmt(c)+'</td><td>'+fmtVol(row['5. volume'])+'</td><td class="'+dayClass+'">'+dayChange+'</td>';
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td>' + date + '</td><td>$' + fmt(row['1. open']) + '</td><td>$' + fmt(row['2. high']) + '</td><td>$' + fmt(row['3. low']) + '</td><td>$' + fmt(c) + '</td><td>' + fmtVol(row['5. volume']) + '</td><td class="' + dayClass + '">' + dayChange + '</td>';
                 tableBody.appendChild(tr);
             });
 
             tableWrap.classList.add('visible');
-            setStatus('✓ '+symbol+' loaded · '+dates.length+' trading days · last updated '+meta['3. Last Refreshed'], 'ok');
+            setStatus('\u2713 ' + symbol + ' loaded \u00B7 ' + dates.length + ' trading days \u00B7 last updated ' + meta['3. Last Refreshed'], 'ok');
+
         } catch (err) {
-            setStatus('Error: '+err.message, 'error');
-            activeSymbol = null; btn.classList.remove('active');
+            setStatus('Error: ' + err.message, 'error');
+            activeSymbol = null;
+            btn.classList.remove('active');
         }
     }
 </script>
