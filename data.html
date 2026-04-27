@@ -17,6 +17,7 @@
             --green: #22d3a0;
             --red: #f43f5e;
             --yellow: #facc15;
+            --orange: #f97316;
             --text: #e2e8f0;
             --muted: #64748b;
             --mono: 'IBM Plex Mono', monospace;
@@ -36,50 +37,21 @@
 
         .toolbar { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; flex-wrap: wrap; }
         .search-wrap { position: relative; flex: 1; min-width: 260px; max-width: 460px; }
-        .search-input {
-            width: 100%;
-            padding: 10px 14px 10px 38px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-family: var(--mono);
-            font-size: 13px;
-            transition: border-color 0.15s;
-        }
+        .search-input { width: 100%; padding: 10px 14px 10px 38px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--mono); font-size: 13px; transition: border-color 0.15s; }
         .search-input:focus { outline: none; border-color: var(--accent); }
         .search-input::placeholder { color: var(--muted); }
         .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
         .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-        .filter-chip {
-            font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
-            padding: 7px 12px; background: var(--surface); border: 1px solid var(--border);
-            color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s;
-            text-transform: uppercase;
-        }
+        .filter-chip { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
         .filter-chip:hover { color: var(--text); border-color: var(--border-bright); }
         .filter-chip.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
         .ticker-count { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: auto; }
 
         .ticker-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-        .ticker-btn {
-            position: relative;
-            font-family: var(--mono); font-size: 13px; font-weight: 700;
-            padding: 8px 32px 8px 14px;
-            background: var(--surface); border: 1px solid var(--border); color: var(--muted);
-            border-radius: 4px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px;
-            display: inline-flex; align-items: center; gap: 6px;
-        }
+        .ticker-btn { position: relative; font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 8px 32px 8px 14px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px; }
         .ticker-btn:hover { border-color: var(--accent); color: var(--text); }
         .ticker-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-        .ticker-star {
-            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-            width: 20px; height: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 13px; color: var(--muted); cursor: pointer;
-            border-radius: 3px; opacity: 0.45;
-            transition: all 0.15s;
-        }
+        .ticker-star { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--muted); cursor: pointer; border-radius: 3px; opacity: 0.45; transition: all 0.15s; }
         .ticker-star:hover { opacity: 1; background: rgba(255,255,255,0.06); transform: translateY(-50%) scale(1.15); }
         .ticker-star.filled { color: var(--yellow); opacity: 1; }
         .ticker-btn.active .ticker-star { opacity: 0.65; }
@@ -90,17 +62,12 @@
         .status-bar .loading { color: var(--accent); }
         .status-bar .error { color: var(--red); }
         .status-bar .ok { color: var(--green); }
+
         .quote-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 28px; display: none; }
         .quote-card.visible { display: block; }
         .quote-top { display: flex; align-items: flex-start; gap: 32px; margin-bottom: 20px; flex-wrap: wrap; }
         .quote-symbol { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--accent); letter-spacing: -1px; display: flex; align-items: center; gap: 12px; }
-        .quote-fav-btn {
-            width: 32px; height: 32px;
-            background: transparent; border: 1px solid var(--border); border-radius: 6px;
-            color: var(--muted); cursor: pointer; font-size: 16px;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s;
-        }
+        .quote-fav-btn { width: 32px; height: 32px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
         .quote-fav-btn:hover { border-color: var(--yellow); color: var(--yellow); }
         .quote-fav-btn.filled { color: var(--yellow); border-color: var(--yellow); background: rgba(250,204,21,0.08); }
         .quote-name { font-size: 14px; color: var(--muted); margin-top: 6px; }
@@ -110,14 +77,41 @@
         .meta-item { display: flex; flex-direction: column; gap: 4px; }
         .meta-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
         .meta-value { font-family: var(--mono); font-size: 15px; font-weight: 600; }
-        .analyze-btn { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 10px 22px; background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%); border: none; color: #fff; border-radius: 6px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
+
+        .btn-row { display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap; }
+        .action-btn { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 10px 20px; border: none; color: #fff; border-radius: 6px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px; }
+        .action-btn:active { transform: translateY(0); }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .chart-btn { background: linear-gradient(135deg, #22d3a0 0%, #14b8a6 100%); }
+        .chart-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(34,211,160,0.35); }
+        .analyze-btn { background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%); }
         .analyze-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(59,130,246,0.35); }
-        .analyze-btn:active { transform: translateY(0); }
-        .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-        .analyze-btn .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
-        .analyze-btn.loading .spinner { display: block; }
-        .analyze-btn .ai-icon { font-size: 15px; }
+        .action-btn .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+        .action-btn.loading .spinner { display: block; }
+        .action-btn .ai-icon { font-size: 15px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Chart panel */
+        .chart-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 28px; display: none; overflow: hidden; }
+        .chart-panel.visible { display: block; animation: slideIn 0.35s ease-out; }
+        .chart-panel-header { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: rgba(34,211,160,0.04); flex-wrap: wrap; }
+        .chart-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: rgba(34,211,160,0.12); padding: 4px 10px; border-radius: 4px; }
+        .chart-title { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); }
+        .chart-range-btns { display: flex; gap: 4px; margin-left: auto; }
+        .chart-range-btn { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 5px 10px; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+        .chart-range-btn:hover { border-color: var(--border-bright); color: var(--text); }
+        .chart-range-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .chart-panel-close { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.15s; line-height: 1; }
+        .chart-panel-close:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .chart-body { padding: 24px; position: relative; }
+        .chart-canvas-wrap { position: relative; width: 100%; height: 320px; }
+        .chart-canvas-wrap canvas { width: 100%; height: 100%; cursor: crosshair; }
+        .chart-tooltip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border-bright); border-radius: 6px; padding: 10px 14px; font-family: var(--mono); font-size: 12px; display: none; z-index: 10; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+        .chart-tooltip .tt-date { color: var(--muted); margin-bottom: 4px; }
+        .chart-tooltip .tt-price { font-size: 14px; font-weight: 700; }
+        .chart-tooltip .tt-change { font-size: 11px; margin-top: 2px; }
+
+        /* AI panel */
         .ai-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 28px; display: none; overflow: hidden; }
         .ai-panel.visible { display: block; animation: slideIn 0.35s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -139,10 +133,14 @@
         .ai-factor-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
         .ai-factor-value { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.5; }
         .ai-disclaimer { font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 14px; margin-top: 8px; line-height: 1.6; font-style: italic; }
+
         .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; display: none; }
         .table-wrap.visible { display: block; }
-        .table-title { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 16px 20px 0; }
-        table { width: 100%; border-collapse: collapse; }
+        .table-header-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 0; gap: 12px; flex-wrap: wrap; }
+        .table-title { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+        .export-btn { font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 8px 14px; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); color: var(--orange); border-radius: 5px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px; }
+        .export-btn:hover { background: rgba(249,115,22,0.2); border-color: var(--orange); }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
         thead { border-bottom: 1px solid var(--border-bright); }
         th { text-align: right; padding: 12px 16px; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
         th:first-child { text-align: left; }
@@ -182,6 +180,7 @@
     <div class="no-results" id="noResults" style="display:none;">No tickers match your search.</div>
 
     <div class="status-bar" id="statusBar"></div>
+
     <div class="quote-card" id="quoteCard">
         <div class="quote-top">
             <div>
@@ -195,14 +194,46 @@
                 <div class="quote-price" id="qPrice"></div>
                 <div class="quote-change" id="qChange"></div>
             </div>
-            <button class="analyze-btn" id="analyzeBtn" onclick="runAIAnalysis()">
-                <span class="ai-icon">&#10022;</span>
-                <span class="btn-label">Analyze with AI</span>
-                <div class="spinner"></div>
-            </button>
+            <div class="btn-row">
+                <button class="action-btn chart-btn" id="chartBtn" onclick="toggleChart()">
+                    <span class="ai-icon">&#9672;</span>
+                    <span class="btn-label">Show Chart</span>
+                </button>
+                <button class="action-btn analyze-btn" id="analyzeBtn" onclick="runAIAnalysis()">
+                    <span class="ai-icon">&#10022;</span>
+                    <span class="btn-label">Analyze with AI</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
         </div>
         <div class="quote-meta" id="qMeta"></div>
     </div>
+
+    <!-- Chart Panel -->
+    <div class="chart-panel" id="chartPanel">
+        <div class="chart-panel-header">
+            <span class="chart-badge">Chart</span>
+            <span class="chart-title" id="chartTitle"></span>
+            <div class="chart-range-btns" id="chartRangeBtns">
+                <button class="chart-range-btn" data-range="20" onclick="setChartRange(20, this)">20D</button>
+                <button class="chart-range-btn active" data-range="60" onclick="setChartRange(60, this)">60D</button>
+                <button class="chart-range-btn" data-range="0" onclick="setChartRange(0, this)">ALL</button>
+            </div>
+            <button class="chart-panel-close" onclick="closeChart()">&times;</button>
+        </div>
+        <div class="chart-body">
+            <div class="chart-canvas-wrap" id="chartWrap">
+                <canvas id="chartCanvas"></canvas>
+                <div class="chart-tooltip" id="chartTooltip">
+                    <div class="tt-date"></div>
+                    <div class="tt-price"></div>
+                    <div class="tt-change"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Panel -->
     <div class="ai-panel" id="aiPanel">
         <div class="ai-panel-header">
             <span class="ai-badge">AI Analysis</span>
@@ -211,8 +242,15 @@
         </div>
         <div class="ai-panel-body" id="aiBody"></div>
     </div>
+
+    <!-- Table -->
     <div class="table-wrap" id="tableWrap">
-        <div class="table-title" id="tableTitle"></div>
+        <div class="table-header-row">
+            <div class="table-title" id="tableTitle"></div>
+            <button class="export-btn" id="exportBtn" onclick="exportCSV()">
+                &#8681; Export CSV
+            </button>
+        </div>
         <table>
             <thead><tr><th>Date</th><th>Open</th><th>High</th><th>Low</th><th>Close</th><th>Volume</th><th>Change</th></tr></thead>
             <tbody id="tableBody"></tbody>
@@ -224,7 +262,6 @@
     var FAV_KEY = 'favoriteStocks';
 
     var TICKERS = [
-        // Defense / Aerospace
         { symbol: 'LMT',   name: 'Lockheed Martin',         sector: 'Defense' },
         { symbol: 'NOC',   name: 'Northrop Grumman',        sector: 'Defense' },
         { symbol: 'RTX',   name: 'RTX Corporation',         sector: 'Defense' },
@@ -239,8 +276,6 @@
         { symbol: 'TXT',   name: 'Textron',                 sector: 'Defense' },
         { symbol: 'LDOS',  name: 'Leidos Holdings',         sector: 'Defense' },
         { symbol: 'PLTR',  name: 'Palantir Technologies',   sector: 'Defense' },
-
-        // Tech
         { symbol: 'AAPL',  name: 'Apple',                   sector: 'Tech' },
         { symbol: 'MSFT',  name: 'Microsoft',               sector: 'Tech' },
         { symbol: 'GOOGL', name: 'Alphabet (Google)',       sector: 'Tech' },
@@ -257,8 +292,6 @@
         { symbol: 'AVGO',  name: 'Broadcom',                sector: 'Tech' },
         { symbol: 'QCOM',  name: 'Qualcomm',                sector: 'Tech' },
         { symbol: 'TSM',   name: 'Taiwan Semiconductor',    sector: 'Tech' },
-
-        // Finance
         { symbol: 'JPM',   name: 'JPMorgan Chase',          sector: 'Finance' },
         { symbol: 'BAC',   name: 'Bank of America',         sector: 'Finance' },
         { symbol: 'WFC',   name: 'Wells Fargo',             sector: 'Finance' },
@@ -269,8 +302,6 @@
         { symbol: 'MA',    name: 'Mastercard',              sector: 'Finance' },
         { symbol: 'AXP',   name: 'American Express',        sector: 'Finance' },
         { symbol: 'BLK',   name: 'BlackRock',               sector: 'Finance' },
-
-        // Healthcare
         { symbol: 'JNJ',   name: 'Johnson & Johnson',       sector: 'Healthcare' },
         { symbol: 'PFE',   name: 'Pfizer',                  sector: 'Healthcare' },
         { symbol: 'UNH',   name: 'UnitedHealth Group',      sector: 'Healthcare' },
@@ -278,8 +309,6 @@
         { symbol: 'LLY',   name: 'Eli Lilly',               sector: 'Healthcare' },
         { symbol: 'MRK',   name: 'Merck',                   sector: 'Healthcare' },
         { symbol: 'TMO',   name: 'Thermo Fisher Scientific', sector: 'Healthcare' },
-
-        // Consumer
         { symbol: 'WMT',   name: 'Walmart',                 sector: 'Consumer' },
         { symbol: 'COST',  name: 'Costco',                  sector: 'Consumer' },
         { symbol: 'KO',    name: 'Coca-Cola',               sector: 'Consumer' },
@@ -290,21 +319,15 @@
         { symbol: 'DIS',   name: 'Walt Disney',             sector: 'Consumer' },
         { symbol: 'HD',    name: 'Home Depot',              sector: 'Consumer' },
         { symbol: 'TGT',   name: 'Target',                  sector: 'Consumer' },
-
-        // Energy
         { symbol: 'XOM',   name: 'ExxonMobil',              sector: 'Energy' },
         { symbol: 'CVX',   name: 'Chevron',                 sector: 'Energy' },
         { symbol: 'COP',   name: 'ConocoPhillips',          sector: 'Energy' },
         { symbol: 'SLB',   name: 'Schlumberger',            sector: 'Energy' },
-
-        // Industrial
         { symbol: 'CAT',   name: 'Caterpillar',             sector: 'Industrial' },
         { symbol: 'DE',    name: 'Deere & Company',         sector: 'Industrial' },
         { symbol: 'HON',   name: 'Honeywell',               sector: 'Industrial' },
         { symbol: 'MMM',   name: '3M',                      sector: 'Industrial' },
         { symbol: 'UPS',   name: 'United Parcel Service',   sector: 'Industrial' },
-
-        // ETFs
         { symbol: 'SPY',   name: 'SPDR S&P 500 ETF',        sector: 'ETF' },
         { symbol: 'QQQ',   name: 'Invesco QQQ (Nasdaq-100)', sector: 'ETF' },
         { symbol: 'VOO',   name: 'Vanguard S&P 500 ETF',    sector: 'ETF' },
@@ -328,57 +351,49 @@
     var tickerCountEl = document.getElementById('tickerCount');
     var noResultsEl = document.getElementById('noResults');
     var quoteFavBtn = document.getElementById('quoteFavBtn');
+    var chartPanel = document.getElementById('chartPanel');
+    var chartCanvas = document.getElementById('chartCanvas');
+    var chartTooltip = document.getElementById('chartTooltip');
+    var chartTitle = document.getElementById('chartTitle');
 
     var activeSymbol = null;
     var currentStockData = null;
     var activeSector = 'All';
+    var chartVisible = false;
+    var chartRange = 60;
 
-    /* ---------- Favorites (localStorage) ---------- */
+    /* ---------- Favorites ---------- */
     function getFavorites() {
         try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
         catch (e) { return []; }
     }
-    function setFavorites(favs) {
-        localStorage.setItem(FAV_KEY, JSON.stringify(favs));
-    }
-    function isFavorite(symbol) {
-        return getFavorites().some(function(f) { return f.symbol === symbol; });
-    }
+    function setFavorites(favs) { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
+    function isFavorite(symbol) { return getFavorites().some(function(f) { return f.symbol === symbol; }); }
     function toggleFavorite(symbol, name) {
         var favs = getFavorites();
         var idx = -1;
         for (var i = 0; i < favs.length; i++) {
             if (favs[i].symbol === symbol) { idx = i; break; }
         }
-        if (idx >= 0) {
-            favs.splice(idx, 1);
-        } else {
-            favs.push({ symbol: symbol, name: name, addedAt: Date.now() });
-        }
+        if (idx >= 0) favs.splice(idx, 1);
+        else favs.push({ symbol: symbol, name: name, addedAt: Date.now() });
         setFavorites(favs);
-        return idx < 0; // true if just added
+        return idx < 0;
     }
     function toggleQuoteFavorite() {
         if (!currentStockData) return;
         var nowFav = toggleFavorite(currentStockData.symbol, currentStockData.name);
         updateQuoteFavBtn(nowFav);
-        // Sync the small star on the matching ticker button
         var btn = document.querySelector('.ticker-btn[data-symbol="' + currentStockData.symbol + '"] .ticker-star');
         if (btn) btn.classList.toggle('filled', nowFav);
-        // If we're filtered by Favorites and just unfavorited, refresh visibility
         if (activeSector === 'Favorites') applyFilters();
     }
     function updateQuoteFavBtn(filled) {
-        if (filled) {
-            quoteFavBtn.classList.add('filled');
-            quoteFavBtn.title = 'Remove from watchlist';
-        } else {
-            quoteFavBtn.classList.remove('filled');
-            quoteFavBtn.title = 'Add to watchlist';
-        }
+        if (filled) { quoteFavBtn.classList.add('filled'); quoteFavBtn.title = 'Remove from watchlist'; }
+        else { quoteFavBtn.classList.remove('filled'); quoteFavBtn.title = 'Add to watchlist'; }
     }
 
-    /* ---------- Sector filter chips ---------- */
+    /* ---------- Sector chips ---------- */
     SECTORS.forEach(function(s) {
         var chip = document.createElement('button');
         chip.className = 'filter-chip' + (s === 'All' ? ' active' : '');
@@ -393,7 +408,7 @@
         filterChipsEl.appendChild(chip);
     });
 
-    /* ---------- Render ticker buttons ---------- */
+    /* ---------- Ticker buttons ---------- */
     TICKERS.forEach(function(t) {
         var btn = document.createElement('button');
         btn.className = 'ticker-btn';
@@ -413,14 +428,10 @@
             e.stopPropagation();
             var nowFav = toggleFavorite(t.symbol, t.name);
             star.classList.toggle('filled', nowFav);
-            // If currently displayed quote matches, sync the big star too
-            if (currentStockData && currentStockData.symbol === t.symbol) {
-                updateQuoteFavBtn(nowFav);
-            }
+            if (currentStockData && currentStockData.symbol === t.symbol) updateQuoteFavBtn(nowFav);
             if (activeSector === 'Favorites') applyFilters();
         });
         btn.appendChild(star);
-
         btn.addEventListener('click', function() { loadStock(t.symbol, t.name, btn); });
         strip.appendChild(btn);
     });
@@ -430,55 +441,263 @@
         var query = searchInput.value.toLowerCase().trim();
         var favSymbols = getFavorites().map(function(f) { return f.symbol; });
         var visible = 0;
-
         document.querySelectorAll('.ticker-btn').forEach(function(btn) {
             var symbol = btn.dataset.symbol.toLowerCase();
             var name = btn.dataset.name.toLowerCase();
             var sector = btn.dataset.sector;
-
             var matchesSearch = !query || symbol.includes(query) || name.includes(query);
             var matchesSector = (activeSector === 'All') ||
                                 (activeSector === 'Favorites' && favSymbols.indexOf(btn.dataset.symbol) !== -1) ||
                                 (sector === activeSector);
-
-            if (matchesSearch && matchesSector) {
-                btn.style.display = '';
-                visible++;
-            } else {
-                btn.style.display = 'none';
-            }
+            if (matchesSearch && matchesSector) { btn.style.display = ''; visible++; }
+            else { btn.style.display = 'none'; }
         });
-
         tickerCountEl.textContent = visible + ' / ' + TICKERS.length + ' tickers';
         noResultsEl.style.display = visible === 0 ? 'block' : 'none';
     }
     searchInput.addEventListener('input', applyFilters);
     applyFilters();
 
-    /* ---------- Existing helpers ---------- */
+    /* ---------- Helpers ---------- */
     function setStatus(msg, type) {
         statusBar.innerHTML = '<span class="' + (type || '') + '">' + msg + '</span>';
     }
-
     function fmt(n, dec) {
         dec = dec || 2;
         return Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
     }
-
     function fmtVol(v) {
         var n = Number(v);
         if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
         if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
         return n.toLocaleString();
     }
+    function closeAI() { aiPanel.classList.remove('visible'); }
 
-    function closeAI() {
-        aiPanel.classList.remove('visible');
+    /* ---------- CHART ---------- */
+    function toggleChart() {
+        if (!currentStockData) return;
+        chartVisible = !chartVisible;
+        var btn = document.getElementById('chartBtn');
+        var label = btn.querySelector('.btn-label');
+        if (chartVisible) {
+            chartPanel.classList.add('visible');
+            label.textContent = 'Hide Chart';
+            setTimeout(drawChart, 50);
+        } else {
+            chartPanel.classList.remove('visible');
+            label.textContent = 'Show Chart';
+        }
+    }
+    function closeChart() {
+        chartVisible = false;
+        chartPanel.classList.remove('visible');
+        document.querySelector('#chartBtn .btn-label').textContent = 'Show Chart';
+    }
+    function setChartRange(days, btn) {
+        chartRange = days;
+        document.querySelectorAll('.chart-range-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (chartVisible) drawChart();
     }
 
+    function drawChart() {
+        if (!currentStockData) return;
+        var canvas = chartCanvas;
+        var dates = currentStockData.dates;
+        var series = currentStockData.series;
+
+        var sliced = chartRange > 0 ? dates.slice(0, chartRange) : dates.slice();
+        sliced = sliced.slice().reverse();
+        var closes = sliced.map(function(d) { return parseFloat(series[d]['4. close']); });
+
+        chartTitle.textContent = currentStockData.symbol + ' \u2014 ' + sliced.length + ' day close';
+
+        var dpr = window.devicePixelRatio || 1;
+        var rect = canvas.parentElement.getBoundingClientRect();
+        var W = rect.width;
+        var H = rect.height;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
+        var ctx = canvas.getContext('2d');
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, W, H);
+
+        var padL = 56, padR = 16, padT = 16, padB = 28;
+        var cW = W - padL - padR;
+        var cH = H - padT - padB;
+
+        var minP = Math.min.apply(null, closes);
+        var maxP = Math.max.apply(null, closes);
+        var pad = (maxP - minP) * 0.08 || 1;
+        minP -= pad;
+        maxP += pad;
+
+        var first = closes[0], last = closes[closes.length - 1];
+        var isUp = last >= first;
+        var line = isUp ? '#22d3a0' : '#f43f5e';
+        var fillTop = isUp ? 'rgba(34,211,160,0.25)' : 'rgba(244,63,94,0.25)';
+        var fillBot = isUp ? 'rgba(34,211,160,0)' : 'rgba(244,63,94,0)';
+
+        ctx.font = '10px IBM Plex Mono, monospace';
+        ctx.fillStyle = '#64748b';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        var gridLines = 5;
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        ctx.lineWidth = 1;
+        for (var i = 0; i <= gridLines; i++) {
+            var y = padT + (cH * i / gridLines);
+            var p = maxP - ((maxP - minP) * i / gridLines);
+            ctx.setLineDash([2, 4]);
+            ctx.beginPath();
+            ctx.moveTo(padL, y);
+            ctx.lineTo(padL + cW, y);
+            ctx.stroke();
+            ctx.fillText('$' + p.toFixed(2), padL - 8, y);
+        }
+        ctx.setLineDash([]);
+
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#64748b';
+        var xLabels = [0, Math.floor(sliced.length / 2), sliced.length - 1];
+        xLabels.forEach(function(idx) {
+            var x = padL + (idx / (sliced.length - 1)) * cW;
+            ctx.fillText(sliced[idx], x, padT + cH + 16);
+        });
+
+        var pts = closes.map(function(c, idx) {
+            var x = padL + (idx / (closes.length - 1)) * cW;
+            var y = padT + (1 - (c - minP) / (maxP - minP)) * cH;
+            return { x: x, y: y };
+        });
+
+        var grad = ctx.createLinearGradient(0, padT, 0, padT + cH);
+        grad.addColorStop(0, fillTop);
+        grad.addColorStop(1, fillBot);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, padT + cH);
+        pts.forEach(function(p) { ctx.lineTo(p.x, p.y); });
+        ctx.lineTo(pts[pts.length - 1].x, padT + cH);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = line;
+        ctx.lineWidth = 2;
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        pts.forEach(function(p, idx) {
+            if (idx === 0) ctx.moveTo(p.x, p.y);
+            else ctx.lineTo(p.x, p.y);
+        });
+        ctx.stroke();
+
+        canvas._chartData = {
+            pts: pts, closes: closes, dates: sliced,
+            padL: padL, padT: padT, cW: cW, cH: cH, W: W, H: H,
+            isUp: isUp, line: line
+        };
+    }
+
+    (function setupChartHover() {
+        var canvas = chartCanvas;
+        canvas.addEventListener('mousemove', function(e) {
+            var cd = canvas._chartData;
+            if (!cd) return;
+            var rect = canvas.getBoundingClientRect();
+            var mx = e.clientX - rect.left;
+            var idx = Math.round(((mx - cd.padL) / cd.cW) * (cd.pts.length - 1));
+            if (idx < 0) idx = 0;
+            if (idx >= cd.pts.length) idx = cd.pts.length - 1;
+            var p = cd.pts[idx];
+
+            var change = idx > 0 ? cd.closes[idx] - cd.closes[idx - 1] : 0;
+            var changePct = idx > 0 ? (change / cd.closes[idx - 1] * 100) : 0;
+            var chgSign = change >= 0 ? '+' : '';
+
+            chartTooltip.querySelector('.tt-date').textContent = cd.dates[idx];
+            chartTooltip.querySelector('.tt-price').textContent = '$' + cd.closes[idx].toFixed(2);
+            chartTooltip.querySelector('.tt-price').style.color = cd.isUp ? '#22d3a0' : '#f43f5e';
+            chartTooltip.querySelector('.tt-change').textContent = chgSign + change.toFixed(2) + ' (' + chgSign + changePct.toFixed(2) + '%)';
+            chartTooltip.querySelector('.tt-change').style.color = change >= 0 ? '#22d3a0' : '#f43f5e';
+
+            var tx = p.x + 16;
+            var ty = p.y - 40;
+            if (tx + 160 > cd.W) tx = p.x - 170;
+            if (ty < 0) ty = p.y + 16;
+            chartTooltip.style.left = tx + 'px';
+            chartTooltip.style.top = ty + 'px';
+            chartTooltip.style.display = 'block';
+
+            drawChart();
+            var ctx = canvas.getContext('2d');
+            var dpr = window.devicePixelRatio || 1;
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.scale(dpr, dpr);
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(p.x, cd.padT);
+            ctx.lineTo(p.x, cd.padT + cd.cH);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = cd.line;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        });
+        canvas.addEventListener('mouseleave', function() {
+            chartTooltip.style.display = 'none';
+            if (canvas._chartData) drawChart();
+        });
+    })();
+
+    window.addEventListener('resize', function() {
+        if (chartVisible && currentStockData) drawChart();
+    });
+
+    /* ---------- CSV EXPORT ---------- */
+    function exportCSV() {
+        if (!currentStockData) return;
+        var dates = currentStockData.dates;
+        var series = currentStockData.series;
+        var symbol = currentStockData.symbol;
+
+        var rows = ['Date,Open,High,Low,Close,Volume'];
+        dates.forEach(function(d) {
+            var r = series[d];
+            rows.push([
+                d,
+                parseFloat(r['1. open']).toFixed(2),
+                parseFloat(r['2. high']).toFixed(2),
+                parseFloat(r['3. low']).toFixed(2),
+                parseFloat(r['4. close']).toFixed(2),
+                r['5. volume']
+            ].join(','));
+        });
+
+        var blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = symbol + '_historical_data.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    /* ---------- AI ---------- */
     async function runAIAnalysis() {
         if (!currentStockData) return;
-
         var btn = document.getElementById('analyzeBtn');
         btn.classList.add('loading');
         btn.querySelector('.btn-label').textContent = 'Analyzing\u2026';
@@ -489,7 +708,6 @@
         var name = currentStockData.name;
         var series = currentStockData.series;
         var dates = currentStockData.dates;
-
         var recentDays = dates.slice(0, 20);
         var priceSummary = recentDays.map(function(d) {
             var row = series[d];
@@ -529,23 +747,15 @@
                     messages: [{ role: 'user', content: prompt }]
                 })
             });
-
             var data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error.message || JSON.stringify(data.error));
-            }
-            if (!data.content) {
-                throw new Error('Unexpected response: ' + JSON.stringify(data).substring(0, 200));
-            }
+            if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+            if (!data.content) throw new Error('Unexpected response: ' + JSON.stringify(data).substring(0, 200));
 
             var text = data.content.map(function(c) { return c.text || ''; }).join('');
             var clean = text.replace(/```json|```/g, '').trim();
             var analysis = JSON.parse(clean);
             var signalClass = analysis.signal.toLowerCase();
-
             document.getElementById('aiTitle').textContent = symbol + ' \u2014 ' + name;
-
             aiBody.innerHTML =
                 '<div class="signal-row">' +
                     '<div class="signal-badge ' + signalClass + '">' + analysis.signal + '</div>' +
@@ -564,9 +774,7 @@
                     '\u26A0 This analysis is generated by AI (Claude) based on recent price data only. It is not financial advice. ' +
                     'Always do your own research and consult a qualified financial advisor before making investment decisions.' +
                 '</div>';
-
             aiPanel.classList.add('visible');
-
         } catch (err) {
             document.getElementById('aiTitle').textContent = symbol + ' \u2014 Error';
             aiBody.innerHTML =
@@ -580,6 +788,7 @@
         }
     }
 
+    /* ---------- Load stock ---------- */
     async function loadStock(symbol, name, btn) {
         if (activeSymbol === symbol) return;
         activeSymbol = symbol;
@@ -590,6 +799,9 @@
         quoteCard.classList.remove('visible');
         tableWrap.classList.remove('visible');
         aiPanel.classList.remove('visible');
+        chartPanel.classList.remove('visible');
+        chartVisible = false;
+        document.querySelector('#chartBtn .btn-label').textContent = 'Show Chart';
         setStatus('Fetching ' + symbol + '\u2026', 'loading');
 
         try {
@@ -603,7 +815,6 @@
                 btn.classList.remove('active');
                 return;
             }
-
             var meta = data['Meta Data'];
             var series = data['Time Series (Daily)'];
             if (!series) throw new Error('Unexpected API response');
@@ -622,7 +833,6 @@
             document.getElementById('qSymbol').textContent = symbol;
             document.getElementById('qName').textContent = name;
             document.getElementById('qPrice').textContent = '$' + fmt(close);
-
             updateQuoteFavBtn(isFavorite(symbol));
 
             var changeEl = document.getElementById('qChange');
@@ -643,7 +853,6 @@
             quoteCard.classList.add('visible');
             document.getElementById('tableTitle').textContent = symbol + ' \u00B7 Daily Price History';
             tableBody.innerHTML = '';
-
             dates.forEach(function(date, i) {
                 var row = series[date];
                 var c = parseFloat(row['4. close']);
@@ -660,10 +869,8 @@
                 tr.innerHTML = '<td>' + date + '</td><td>$' + fmt(row['1. open']) + '</td><td>$' + fmt(row['2. high']) + '</td><td>$' + fmt(row['3. low']) + '</td><td>$' + fmt(c) + '</td><td>' + fmtVol(row['5. volume']) + '</td><td class="' + dayClass + '">' + dayChange + '</td>';
                 tableBody.appendChild(tr);
             });
-
             tableWrap.classList.add('visible');
             setStatus('\u2713 ' + symbol + ' loaded \u00B7 ' + dates.length + ' trading days \u00B7 last updated ' + meta['3. Last Refreshed'], 'ok');
-
         } catch (err) {
             setStatus('Error: ' + err.message, 'error');
             activeSymbol = null;
