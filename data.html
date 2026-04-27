@@ -33,10 +33,59 @@
         .page-header { margin-bottom: 32px; }
         .page-title { font-family: var(--mono); font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 6px; }
         .page-subtitle { font-size: 14px; color: var(--muted); }
-        .ticker-strip { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
-        .ticker-btn { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 8px 18px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px; }
+
+        .toolbar { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; flex-wrap: wrap; }
+        .search-wrap { position: relative; flex: 1; min-width: 260px; max-width: 460px; }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 13px;
+            transition: border-color 0.15s;
+        }
+        .search-input:focus { outline: none; border-color: var(--accent); }
+        .search-input::placeholder { color: var(--muted); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+        .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-chip {
+            font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+            padding: 7px 12px; background: var(--surface); border: 1px solid var(--border);
+            color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s;
+            text-transform: uppercase;
+        }
+        .filter-chip:hover { color: var(--text); border-color: var(--border-bright); }
+        .filter-chip.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .ticker-count { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: auto; }
+
+        .ticker-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+        .ticker-btn {
+            position: relative;
+            font-family: var(--mono); font-size: 13px; font-weight: 700;
+            padding: 8px 32px 8px 14px;
+            background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+            border-radius: 4px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
         .ticker-btn:hover { border-color: var(--accent); color: var(--text); }
         .ticker-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .ticker-star {
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: var(--muted); cursor: pointer;
+            border-radius: 3px; opacity: 0.45;
+            transition: all 0.15s;
+        }
+        .ticker-star:hover { opacity: 1; background: rgba(255,255,255,0.06); transform: translateY(-50%) scale(1.15); }
+        .ticker-star.filled { color: var(--yellow); opacity: 1; }
+        .ticker-btn.active .ticker-star { opacity: 0.65; }
+        .ticker-btn.active .ticker-star.filled { opacity: 1; }
+        .no-results { font-family: var(--mono); font-size: 13px; color: var(--muted); padding: 24px; text-align: center; background: var(--surface); border: 1px dashed var(--border); border-radius: 6px; }
+
         .status-bar { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 20px; min-height: 18px; }
         .status-bar .loading { color: var(--accent); }
         .status-bar .error { color: var(--red); }
@@ -44,7 +93,16 @@
         .quote-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 28px; display: none; }
         .quote-card.visible { display: block; }
         .quote-top { display: flex; align-items: flex-start; gap: 32px; margin-bottom: 20px; flex-wrap: wrap; }
-        .quote-symbol { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--accent); letter-spacing: -1px; }
+        .quote-symbol { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--accent); letter-spacing: -1px; display: flex; align-items: center; gap: 12px; }
+        .quote-fav-btn {
+            width: 32px; height: 32px;
+            background: transparent; border: 1px solid var(--border); border-radius: 6px;
+            color: var(--muted); cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
+        }
+        .quote-fav-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+        .quote-fav-btn.filled { color: var(--yellow); border-color: var(--yellow); background: rgba(250,204,21,0.08); }
         .quote-name { font-size: 14px; color: var(--muted); margin-top: 6px; }
         .quote-price { font-family: var(--mono); font-size: 42px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
         .quote-change { font-family: var(--mono); font-size: 16px; font-weight: 600; margin-top: 6px; }
@@ -108,14 +166,29 @@
 <main class="main-content">
     <div class="page-header">
         <h1 class="page-title">Data</h1>
-        <p class="page-subtitle">Live market data via Alpha Vantage · AI analysis powered by Claude · Select a ticker to load</p>
+        <p class="page-subtitle">Live market data via Alpha Vantage · AI analysis powered by Claude · Click ★ to add to your watchlist</p>
     </div>
+
+    <div class="toolbar">
+        <div class="search-wrap">
+            <span class="search-icon">⌕</span>
+            <input type="text" id="tickerSearch" class="search-input" placeholder="Search by symbol or name…" autocomplete="off">
+        </div>
+        <div class="filter-chips" id="filterChips"></div>
+        <div class="ticker-count" id="tickerCount"></div>
+    </div>
+
     <div class="ticker-strip" id="tickerStrip"></div>
+    <div class="no-results" id="noResults" style="display:none;">No tickers match your search.</div>
+
     <div class="status-bar" id="statusBar"></div>
     <div class="quote-card" id="quoteCard">
         <div class="quote-top">
             <div>
-                <div class="quote-symbol" id="qSymbol"></div>
+                <div class="quote-symbol">
+                    <span id="qSymbol"></span>
+                    <button class="quote-fav-btn" id="quoteFavBtn" onclick="toggleQuoteFavorite()" title="Add to watchlist">★</button>
+                </div>
                 <div class="quote-name" id="qName"></div>
             </div>
             <div>
@@ -148,19 +221,100 @@
 </main>
 <script>
     var WORKER_URL = 'https://ai-proxy2.jlurie0626.workers.dev';
+    var FAV_KEY = 'favoriteStocks';
 
     var TICKERS = [
-        { symbol: 'LMT',  name: 'Lockheed Martin' },
-        { symbol: 'NOC',  name: 'Northrop Grumman' },
-        { symbol: 'RTX',  name: 'RTX Corporation' },
-        { symbol: 'GD',   name: 'General Dynamics' },
-        { symbol: 'BA',   name: 'Boeing' },
-        { symbol: 'GE',   name: 'GE Aerospace' },
-        { symbol: 'LHX',  name: 'L3Harris Technologies' },
-        { symbol: 'KTOS', name: 'Kratos Defense' },
-        { symbol: 'AVAV', name: 'AeroVironment' },
-        { symbol: 'RKLB', name: 'Rocket Lab' }
+        // Defense / Aerospace
+        { symbol: 'LMT',   name: 'Lockheed Martin',         sector: 'Defense' },
+        { symbol: 'NOC',   name: 'Northrop Grumman',        sector: 'Defense' },
+        { symbol: 'RTX',   name: 'RTX Corporation',         sector: 'Defense' },
+        { symbol: 'GD',    name: 'General Dynamics',        sector: 'Defense' },
+        { symbol: 'BA',    name: 'Boeing',                  sector: 'Defense' },
+        { symbol: 'GE',    name: 'GE Aerospace',            sector: 'Defense' },
+        { symbol: 'LHX',   name: 'L3Harris Technologies',   sector: 'Defense' },
+        { symbol: 'KTOS',  name: 'Kratos Defense',          sector: 'Defense' },
+        { symbol: 'AVAV',  name: 'AeroVironment',           sector: 'Defense' },
+        { symbol: 'RKLB',  name: 'Rocket Lab',              sector: 'Defense' },
+        { symbol: 'HII',   name: 'Huntington Ingalls',      sector: 'Defense' },
+        { symbol: 'TXT',   name: 'Textron',                 sector: 'Defense' },
+        { symbol: 'LDOS',  name: 'Leidos Holdings',         sector: 'Defense' },
+        { symbol: 'PLTR',  name: 'Palantir Technologies',   sector: 'Defense' },
+
+        // Tech
+        { symbol: 'AAPL',  name: 'Apple',                   sector: 'Tech' },
+        { symbol: 'MSFT',  name: 'Microsoft',               sector: 'Tech' },
+        { symbol: 'GOOGL', name: 'Alphabet (Google)',       sector: 'Tech' },
+        { symbol: 'AMZN',  name: 'Amazon',                  sector: 'Tech' },
+        { symbol: 'META',  name: 'Meta Platforms',          sector: 'Tech' },
+        { symbol: 'NVDA',  name: 'NVIDIA',                  sector: 'Tech' },
+        { symbol: 'TSLA',  name: 'Tesla',                   sector: 'Tech' },
+        { symbol: 'AMD',   name: 'Advanced Micro Devices',  sector: 'Tech' },
+        { symbol: 'INTC',  name: 'Intel',                   sector: 'Tech' },
+        { symbol: 'ORCL',  name: 'Oracle',                  sector: 'Tech' },
+        { symbol: 'CRM',   name: 'Salesforce',              sector: 'Tech' },
+        { symbol: 'ADBE',  name: 'Adobe',                   sector: 'Tech' },
+        { symbol: 'NFLX',  name: 'Netflix',                 sector: 'Tech' },
+        { symbol: 'AVGO',  name: 'Broadcom',                sector: 'Tech' },
+        { symbol: 'QCOM',  name: 'Qualcomm',                sector: 'Tech' },
+        { symbol: 'TSM',   name: 'Taiwan Semiconductor',    sector: 'Tech' },
+
+        // Finance
+        { symbol: 'JPM',   name: 'JPMorgan Chase',          sector: 'Finance' },
+        { symbol: 'BAC',   name: 'Bank of America',         sector: 'Finance' },
+        { symbol: 'WFC',   name: 'Wells Fargo',             sector: 'Finance' },
+        { symbol: 'GS',    name: 'Goldman Sachs',           sector: 'Finance' },
+        { symbol: 'MS',    name: 'Morgan Stanley',          sector: 'Finance' },
+        { symbol: 'C',     name: 'Citigroup',               sector: 'Finance' },
+        { symbol: 'V',     name: 'Visa',                    sector: 'Finance' },
+        { symbol: 'MA',    name: 'Mastercard',              sector: 'Finance' },
+        { symbol: 'AXP',   name: 'American Express',        sector: 'Finance' },
+        { symbol: 'BLK',   name: 'BlackRock',               sector: 'Finance' },
+
+        // Healthcare
+        { symbol: 'JNJ',   name: 'Johnson & Johnson',       sector: 'Healthcare' },
+        { symbol: 'PFE',   name: 'Pfizer',                  sector: 'Healthcare' },
+        { symbol: 'UNH',   name: 'UnitedHealth Group',      sector: 'Healthcare' },
+        { symbol: 'ABBV',  name: 'AbbVie',                  sector: 'Healthcare' },
+        { symbol: 'LLY',   name: 'Eli Lilly',               sector: 'Healthcare' },
+        { symbol: 'MRK',   name: 'Merck',                   sector: 'Healthcare' },
+        { symbol: 'TMO',   name: 'Thermo Fisher Scientific', sector: 'Healthcare' },
+
+        // Consumer
+        { symbol: 'WMT',   name: 'Walmart',                 sector: 'Consumer' },
+        { symbol: 'COST',  name: 'Costco',                  sector: 'Consumer' },
+        { symbol: 'KO',    name: 'Coca-Cola',               sector: 'Consumer' },
+        { symbol: 'PEP',   name: 'PepsiCo',                 sector: 'Consumer' },
+        { symbol: 'MCD',   name: "McDonald's",              sector: 'Consumer' },
+        { symbol: 'NKE',   name: 'Nike',                    sector: 'Consumer' },
+        { symbol: 'SBUX',  name: 'Starbucks',               sector: 'Consumer' },
+        { symbol: 'DIS',   name: 'Walt Disney',             sector: 'Consumer' },
+        { symbol: 'HD',    name: 'Home Depot',              sector: 'Consumer' },
+        { symbol: 'TGT',   name: 'Target',                  sector: 'Consumer' },
+
+        // Energy
+        { symbol: 'XOM',   name: 'ExxonMobil',              sector: 'Energy' },
+        { symbol: 'CVX',   name: 'Chevron',                 sector: 'Energy' },
+        { symbol: 'COP',   name: 'ConocoPhillips',          sector: 'Energy' },
+        { symbol: 'SLB',   name: 'Schlumberger',            sector: 'Energy' },
+
+        // Industrial
+        { symbol: 'CAT',   name: 'Caterpillar',             sector: 'Industrial' },
+        { symbol: 'DE',    name: 'Deere & Company',         sector: 'Industrial' },
+        { symbol: 'HON',   name: 'Honeywell',               sector: 'Industrial' },
+        { symbol: 'MMM',   name: '3M',                      sector: 'Industrial' },
+        { symbol: 'UPS',   name: 'United Parcel Service',   sector: 'Industrial' },
+
+        // ETFs
+        { symbol: 'SPY',   name: 'SPDR S&P 500 ETF',        sector: 'ETF' },
+        { symbol: 'QQQ',   name: 'Invesco QQQ (Nasdaq-100)', sector: 'ETF' },
+        { symbol: 'VOO',   name: 'Vanguard S&P 500 ETF',    sector: 'ETF' },
+        { symbol: 'VTI',   name: 'Vanguard Total Stock Market', sector: 'ETF' },
+        { symbol: 'DIA',   name: 'SPDR Dow Jones ETF',      sector: 'ETF' },
+        { symbol: 'IWM',   name: 'iShares Russell 2000 ETF', sector: 'ETF' },
+        { symbol: 'ITA',   name: 'iShares Aerospace & Defense ETF', sector: 'ETF' }
     ];
+
+    var SECTORS = ['All', 'Favorites', 'Defense', 'Tech', 'Finance', 'Healthcare', 'Consumer', 'Energy', 'Industrial', 'ETF'];
 
     var strip = document.getElementById('tickerStrip');
     var statusBar = document.getElementById('statusBar');
@@ -169,19 +323,139 @@
     var tableBody = document.getElementById('tableBody');
     var aiPanel = document.getElementById('aiPanel');
     var aiBody = document.getElementById('aiBody');
+    var searchInput = document.getElementById('tickerSearch');
+    var filterChipsEl = document.getElementById('filterChips');
+    var tickerCountEl = document.getElementById('tickerCount');
+    var noResultsEl = document.getElementById('noResults');
+    var quoteFavBtn = document.getElementById('quoteFavBtn');
 
     var activeSymbol = null;
     var currentStockData = null;
+    var activeSector = 'All';
 
+    /* ---------- Favorites (localStorage) ---------- */
+    function getFavorites() {
+        try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+        catch (e) { return []; }
+    }
+    function setFavorites(favs) {
+        localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+    }
+    function isFavorite(symbol) {
+        return getFavorites().some(function(f) { return f.symbol === symbol; });
+    }
+    function toggleFavorite(symbol, name) {
+        var favs = getFavorites();
+        var idx = -1;
+        for (var i = 0; i < favs.length; i++) {
+            if (favs[i].symbol === symbol) { idx = i; break; }
+        }
+        if (idx >= 0) {
+            favs.splice(idx, 1);
+        } else {
+            favs.push({ symbol: symbol, name: name, addedAt: Date.now() });
+        }
+        setFavorites(favs);
+        return idx < 0; // true if just added
+    }
+    function toggleQuoteFavorite() {
+        if (!currentStockData) return;
+        var nowFav = toggleFavorite(currentStockData.symbol, currentStockData.name);
+        updateQuoteFavBtn(nowFav);
+        // Sync the small star on the matching ticker button
+        var btn = document.querySelector('.ticker-btn[data-symbol="' + currentStockData.symbol + '"] .ticker-star');
+        if (btn) btn.classList.toggle('filled', nowFav);
+        // If we're filtered by Favorites and just unfavorited, refresh visibility
+        if (activeSector === 'Favorites') applyFilters();
+    }
+    function updateQuoteFavBtn(filled) {
+        if (filled) {
+            quoteFavBtn.classList.add('filled');
+            quoteFavBtn.title = 'Remove from watchlist';
+        } else {
+            quoteFavBtn.classList.remove('filled');
+            quoteFavBtn.title = 'Add to watchlist';
+        }
+    }
+
+    /* ---------- Sector filter chips ---------- */
+    SECTORS.forEach(function(s) {
+        var chip = document.createElement('button');
+        chip.className = 'filter-chip' + (s === 'All' ? ' active' : '');
+        chip.textContent = s;
+        chip.dataset.sector = s;
+        chip.addEventListener('click', function() {
+            activeSector = s;
+            document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+            chip.classList.add('active');
+            applyFilters();
+        });
+        filterChipsEl.appendChild(chip);
+    });
+
+    /* ---------- Render ticker buttons ---------- */
     TICKERS.forEach(function(t) {
         var btn = document.createElement('button');
         btn.className = 'ticker-btn';
-        btn.textContent = t.symbol;
         btn.dataset.symbol = t.symbol;
+        btn.dataset.name = t.name;
+        btn.dataset.sector = t.sector;
+
+        var label = document.createElement('span');
+        label.textContent = t.symbol;
+        btn.appendChild(label);
+
+        var star = document.createElement('span');
+        star.className = 'ticker-star' + (isFavorite(t.symbol) ? ' filled' : '');
+        star.innerHTML = '&#9733;';
+        star.title = 'Toggle watchlist';
+        star.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var nowFav = toggleFavorite(t.symbol, t.name);
+            star.classList.toggle('filled', nowFav);
+            // If currently displayed quote matches, sync the big star too
+            if (currentStockData && currentStockData.symbol === t.symbol) {
+                updateQuoteFavBtn(nowFav);
+            }
+            if (activeSector === 'Favorites') applyFilters();
+        });
+        btn.appendChild(star);
+
         btn.addEventListener('click', function() { loadStock(t.symbol, t.name, btn); });
         strip.appendChild(btn);
     });
 
+    /* ---------- Search + sector filtering ---------- */
+    function applyFilters() {
+        var query = searchInput.value.toLowerCase().trim();
+        var favSymbols = getFavorites().map(function(f) { return f.symbol; });
+        var visible = 0;
+
+        document.querySelectorAll('.ticker-btn').forEach(function(btn) {
+            var symbol = btn.dataset.symbol.toLowerCase();
+            var name = btn.dataset.name.toLowerCase();
+            var sector = btn.dataset.sector;
+
+            var matchesSearch = !query || symbol.includes(query) || name.includes(query);
+            var matchesSector = (activeSector === 'All') ||
+                                (activeSector === 'Favorites' && favSymbols.indexOf(btn.dataset.symbol) !== -1) ||
+                                (sector === activeSector);
+
+            if (matchesSearch && matchesSector) {
+                btn.style.display = '';
+                visible++;
+            } else {
+                btn.style.display = 'none';
+            }
+        });
+
+        tickerCountEl.textContent = visible + ' / ' + TICKERS.length + ' tickers';
+        noResultsEl.style.display = visible === 0 ? 'block' : 'none';
+    }
+    searchInput.addEventListener('input', applyFilters);
+    applyFilters();
+
+    /* ---------- Existing helpers ---------- */
     function setStatus(msg, type) {
         statusBar.innerHTML = '<span class="' + (type || '') + '">' + msg + '</span>';
     }
@@ -258,7 +532,6 @@
 
             var data = await response.json();
 
-            // Show the actual error from Anthropic if there is one
             if (data.error) {
                 throw new Error(data.error.message || JSON.stringify(data.error));
             }
@@ -350,6 +623,8 @@
             document.getElementById('qName').textContent = name;
             document.getElementById('qPrice').textContent = '$' + fmt(close);
 
+            updateQuoteFavBtn(isFavorite(symbol));
+
             var changeEl = document.getElementById('qChange');
             changeEl.textContent = (isUp ? '+' : '') + fmt(change) + ' (' + (isUp ? '+' : '') + fmt(changePct) + '%)';
             changeEl.className = 'quote-change ' + (isUp ? 'up' : 'down');
@@ -395,6 +670,16 @@
             btn.classList.remove('active');
         }
     }
+
+    (function autoLoadFromUrl() {
+        var params = new URLSearchParams(window.location.search);
+        var symbolParam = params.get('symbol');
+        if (!symbolParam) return;
+        var ticker = TICKERS.find(function(t) { return t.symbol === symbolParam.toUpperCase(); });
+        if (!ticker) return;
+        var btn = document.querySelector('.ticker-btn[data-symbol="' + ticker.symbol + '"]');
+        if (btn) loadStock(ticker.symbol, ticker.name, btn);
+    })();
 </script>
 </body>
 </html>
