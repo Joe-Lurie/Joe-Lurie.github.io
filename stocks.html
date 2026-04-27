@@ -3,866 +3,558 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stocks - Joseph Lurie</title>
+    <title>Stocks – Joseph Lurie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0e27;
+            --surface: #151a30;
+            --surface-2: #1a1f38;
+            --border: #1e2542;
+            --border-bright: #2d3548;
+            --accent: #3b82f6;
+            --accent-dim: rgba(59,130,246,0.12);
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #facc15;
+            --text: #e4e4e7;
+            --muted: #9ca3af;
+            --muted-2: #6b7280;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #0a0e27;
-            color: #e4e4e7;
-        }
+        body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-        /* Top Navigation Bar */
-        .top-nav {
-            background-color: #151a30;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            border-bottom: 1px solid #1e2542;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-        }
+        /* Top Nav */
+        .top-nav { background: var(--surface); height: 60px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; right: 0; z-index: 100; gap: 24px; }
+        .logo { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); text-decoration: none; flex-shrink: 0; }
+        .search-bar { flex: 1; max-width: 500px; position: relative; }
+        .search-bar input { width: 100%; padding: 10px 14px 10px 38px; background: var(--border); border: 1px solid var(--border-bright); border-radius: 6px; color: var(--text); font-family: var(--mono); font-size: 13px; }
+        .search-bar input::placeholder { color: var(--muted-2); }
+        .search-bar input:focus { outline: none; border-color: var(--accent); }
+        .search-bar .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted-2); font-size: 14px; pointer-events: none; }
+        .nav-links { display: flex; gap: 24px; margin-left: auto; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-right: 40px;
-            text-decoration: none;
-        }
+        /* Main */
+        .main-content { margin-top: 60px; padding: 32px 24px; max-width: 1400px; margin-left: auto; margin-right: auto; }
 
-        .search-bar {
-            flex: 1;
-            max-width: 500px;
-        }
+        .page-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+        .page-title-block { flex: 1; min-width: 240px; }
+        .page-title { font-family: var(--mono); font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+        .page-title .star-icon { color: var(--yellow); }
+        .page-subtitle { font-size: 14px; color: var(--muted); }
+        .header-stats { display: flex; gap: 28px; }
+        .stat { text-align: right; }
+        .stat-label { font-family: var(--mono); font-size: 11px; color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+        .stat-value { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--text); }
 
-        .search-bar input {
-            width: 100%;
-            padding: 10px 16px;
-            background-color: #1e2542;
-            border: 1px solid #2d3548;
-            border-radius: 6px;
-            color: #e4e4e7;
-            font-size: 14px;
-        }
+        /* Action bar */
+        .action-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .btn { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 9px 16px; background: var(--surface); border: 1px solid var(--border-bright); color: var(--text); border-radius: 6px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+        .btn:hover { border-color: var(--accent); color: var(--accent); }
+        .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .btn.primary:hover { background: #2563eb; color: #fff; }
+        .btn.danger:hover { border-color: var(--red); color: var(--red); }
+        .btn .spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+        .btn.loading .spinner { display: inline-block; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .price-status { font-family: var(--mono); font-size: 11px; color: var(--muted-2); margin-left: auto; }
 
-        .search-bar input::placeholder {
-            color: #6b7280;
-        }
+        /* Filter tabs */
+        .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .filter-tab { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; padding: 7px 14px; background: transparent; border: 1px solid var(--border-bright); color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
+        .filter-tab:hover { background: var(--surface); color: var(--text); }
+        .filter-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-        .search-bar input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
+        /* View toggle */
+        .view-toggle { display: flex; gap: 6px; margin-bottom: 20px; }
+        .view-btn { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; padding: 7px 14px; background: var(--surface); border: 1px solid var(--border-bright); color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+        .view-btn:hover { color: var(--text); }
+        .view-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            margin-left: auto;
-        }
+        /* Card grid */
+        .stocks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; margin-bottom: 40px; }
+        .stock-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px; transition: all 0.2s; position: relative; }
+        .stock-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 24px rgba(59,130,246,0.12); }
+        .card-remove-btn { position: absolute; top: 14px; right: 14px; width: 28px; height: 28px; background: transparent; border: 1px solid var(--border-bright); color: var(--muted); border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+        .card-remove-btn:hover { color: var(--red); border-color: var(--red); background: rgba(239,68,68,0.08); }
 
-        .nav-links a {
-            color: #9ca3af;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
+        .card-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; padding-right: 36px; }
+        .stock-logo { width: 48px; height: 48px; background: var(--accent-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+        .stock-info { flex: 1; min-width: 0; }
+        .stock-symbol { font-family: var(--mono); font-size: 22px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 4px; }
+        .stock-name { font-size: 13px; color: var(--muted); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: #3b82f6;
-        }
+        .card-price { margin-bottom: 16px; min-height: 54px; }
+        .price-value { font-family: var(--mono); font-size: 26px; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
+        .price-change { font-family: var(--mono); font-size: 13px; font-weight: 600; }
+        .price-placeholder { font-family: var(--mono); font-size: 12px; color: var(--muted-2); font-style: italic; }
+        .up { color: var(--green); }
+        .down { color: var(--red); }
 
-        /* Main Content */
-        .main-content {
-            margin-top: 60px;
-            padding: 24px;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .meta-tag { font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--muted); background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 3px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .meta-tag.sector-defense { color: #60a5fa; background: rgba(96,165,250,0.1); }
+        .meta-tag.sector-tech { color: #a78bfa; background: rgba(167,139,250,0.1); }
+        .meta-tag.sector-finance { color: #34d399; background: rgba(52,211,153,0.1); }
+        .meta-tag.sector-healthcare { color: #f472b6; background: rgba(244,114,182,0.1); }
+        .meta-tag.sector-consumer { color: #fbbf24; background: rgba(251,191,36,0.1); }
+        .meta-tag.sector-energy { color: #fb923c; background: rgba(251,146,60,0.1); }
+        .meta-tag.sector-industrial { color: #94a3b8; background: rgba(148,163,184,0.1); }
+        .meta-tag.sector-etf { color: #2dd4bf; background: rgba(45,212,191,0.1); }
 
-        .page-header {
-            margin-bottom: 32px;
-        }
+        .card-view-btn { display: block; width: 100%; padding: 10px; background: var(--accent-dim); border: 1px solid var(--accent); color: var(--accent); border-radius: 6px; text-decoration: none; text-align: center; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.15s; }
+        .card-view-btn:hover { background: var(--accent); color: #fff; }
 
-        .page-title {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+        /* Table view */
+        .table-container { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--surface-2); border-bottom: 1px solid var(--border-bright); }
+        th { text-align: left; padding: 14px 16px; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.8px; }
+        th.right, td.right { text-align: right; }
+        td { padding: 12px 16px; font-family: var(--mono); font-size: 13px; border-bottom: 1px solid var(--border); }
+        tbody tr { transition: background 0.15s; }
+        tbody tr:hover { background: var(--surface-2); }
+        tbody tr:last-child td { border-bottom: none; }
+        .symbol-cell { display: flex; align-items: center; gap: 12px; }
+        .mini-logo { width: 32px; height: 32px; background: var(--accent-dim); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+        .table-symbol { font-weight: 700; }
+        .table-name { font-size: 11px; color: var(--muted); }
+        .table-actions { display: flex; gap: 6px; justify-content: flex-end; }
+        .table-action-btn { padding: 5px 10px; font-family: var(--mono); font-size: 10px; font-weight: 600; border-radius: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border-bright); background: transparent; color: var(--muted); text-decoration: none; letter-spacing: 0.5px; }
+        .table-action-btn.view { color: var(--accent); border-color: var(--accent); }
+        .table-action-btn.view:hover { background: var(--accent); color: #fff; }
+        .table-action-btn.remove:hover { color: var(--red); border-color: var(--red); }
 
-        .page-subtitle {
-            font-size: 16px;
-            color: #9ca3af;
-        }
+        /* Empty state */
+        .empty-state { background: var(--surface); border: 1px dashed var(--border-bright); border-radius: 12px; padding: 60px 32px; text-align: center; }
+        .empty-icon { font-size: 56px; color: var(--border-bright); margin-bottom: 16px; }
+        .empty-title { font-family: var(--mono); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .empty-text { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto; }
+        .empty-text code { font-family: var(--mono); background: rgba(250,204,21,0.08); color: var(--yellow); padding: 2px 6px; border-radius: 3px; font-size: 13px; }
 
-        /* Filter Tabs */
-        .filter-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            border-bottom: 1px solid #1e2542;
-            padding-bottom: 16px;
-        }
+        .hidden { display: none !important; }
 
-        .filter-tab {
-            padding: 8px 16px;
-            background-color: transparent;
-            border: 1px solid #2d3548;
-            color: #9ca3af;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3d4558; }
 
-        .filter-tab:hover {
-            background-color: #1e2542;
-            color: #e4e4e7;
-        }
-
-        .filter-tab.active {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-            color: white;
-        }
-
-        /* Stock Cards Grid */
-        .stocks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .stock-card {
-            background-color: #151a30;
-            border: 1px solid #1e2542;
-            border-radius: 8px;
-            padding: 20px;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .stock-card:hover {
-            transform: translateY(-4px);
-            border-color: #3b82f6;
-            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.1);
-        }
-
-        .stock-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 16px;
-        }
-
-        .stock-info {
-            flex: 1;
-        }
-
-        .stock-symbol {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .stock-name {
-            font-size: 14px;
-            color: #9ca3af;
-        }
-
-        .stock-logo {
-            width: 48px;
-            height: 48px;
-            background-color: #1e2542;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 700;
-            color: #3b82f6;
-        }
-
-        .stock-price-section {
-            margin-bottom: 16px;
-        }
-
-        .stock-price {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .stock-change {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .positive {
-            color: #10b981;
-        }
-
-        .negative {
-            color: #ef4444;
-        }
-
-        .stock-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding-top: 16px;
-            border-top: 1px solid #1e2542;
-        }
-
-        .stat {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-
-        .stat-value {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Stock Table View (Alternative) */
-        .table-container {
-            background-color: #151a30;
-            border-radius: 8px;
-            border: 1px solid #1e2542;
-            overflow-x: auto;
-            margin-top: 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background-color: #1a1f38;
-            border-bottom: 1px solid #2d3548;
-        }
-
-        th {
-            text-align: left;
-            padding: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 16px;
-            font-size: 14px;
-            border-bottom: 1px solid #1e2542;
-        }
-
-        tbody tr {
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-
-        tbody tr:hover {
-            background-color: #1a1f38;
-        }
-
-        .symbol-cell {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .mini-logo {
-            width: 36px;
-            height: 36px;
-            background-color: #1e2542;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            color: #3b82f6;
-        }
-
-        .symbol-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .symbol-ticker {
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .symbol-name {
-            font-size: 12px;
-            color: #9ca3af;
-        }
-
-        /* View Toggle */
-        .view-toggle {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .view-btn {
-            padding: 8px 16px;
-            background-color: #1e2542;
-            border: 1px solid #2d3548;
-            color: #9ca3af;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .view-btn:hover {
-            background-color: #2d3548;
-            color: #e4e4e7;
-        }
-
-        .view-btn.active {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-            color: white;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #151a30;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #2d3548;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #3d4558;
+        @media (max-width: 600px) {
+            .search-bar { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <a href="index.html" class="logo">Joseph Lurie</a>
-        <div class="search-bar">
-            <input type="text" placeholder="Search stocks, ETFs, indices...">
+
+<nav class="top-nav">
+    <a href="index.html" class="logo">Joseph Lurie</a>
+    <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="navSearch" placeholder="Search your watchlist…" autocomplete="off">
+    </div>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="stocks.html" class="active">Stocks</a>
+        <a href="data.html">Data</a>
+    </div>
+</nav>
+
+<main class="main-content">
+    <div class="page-header">
+        <div class="page-title-block">
+            <h1 class="page-title"><span class="star-icon">&#9733;</span> Watchlist</h1>
+            <p class="page-subtitle">Stocks you've starred from the Data tab · Saved locally in your browser</p>
         </div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="stocks.html" class="active">Stocks</a>
-            <a href="data.html">Data</a>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="page-header">
-            <h1 class="page-title">Stocks</h1>
-            <p class="page-subtitle">Track and analyze top performing stocks</p>
-        </div>
-
-        <!-- Filter Tabs -->
-        <div class="filter-tabs">
-            <button class="filter-tab active">All Stocks</button>
-            <button class="filter-tab">Technology</button>
-            <button class="filter-tab">Finance</button>
-            <button class="filter-tab">Healthcare</button>
-            <button class="filter-tab">Energy</button>
-            <button class="filter-tab">Consumer</button>
-        </div>
-
-        <!-- View Toggle -->
-        <div class="view-toggle">
-            <button class="view-btn active" id="gridViewBtn">Grid View</button>
-            <button class="view-btn" id="tableViewBtn">Table View</button>
-        </div>
-
-        <!-- Stock Cards Grid -->
-        <div class="stocks-grid" id="gridView">
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">AAPL</div>
-                        <div class="stock-name">Apple Inc.</div>
-                    </div>
-                    <div class="stock-logo">A</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$182.45</div>
-                    <div class="stock-change positive">+$2.35 (+1.31%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$2.85T</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">52.4M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">28.45</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$199.62</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">MSFT</div>
-                        <div class="stock-name">Microsoft Corporation</div>
-                    </div>
-                    <div class="stock-logo">M</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$412.88</div>
-                    <div class="stock-change positive">+$5.12 (+1.26%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$3.07T</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">28.3M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">35.82</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$420.16</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">GOOGL</div>
-                        <div class="stock-name">Alphabet Inc.</div>
-                    </div>
-                    <div class="stock-logo">G</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$165.32</div>
-                    <div class="stock-change negative">-$1.42 (-0.85%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$2.04T</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">31.2M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">24.67</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$175.43</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">AMZN</div>
-                        <div class="stock-name">Amazon.com Inc.</div>
-                    </div>
-                    <div class="stock-logo">A</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$178.90</div>
-                    <div class="stock-change positive">+$3.21 (+1.83%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$1.85T</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">45.8M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">52.34</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$188.65</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">TSLA</div>
-                        <div class="stock-name">Tesla Inc.</div>
-                    </div>
-                    <div class="stock-logo">T</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$248.55</div>
-                    <div class="stock-change negative">-$4.32 (-1.71%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$790B</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">118.5M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">68.92</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$299.29</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">NVDA</div>
-                        <div class="stock-name">NVIDIA Corporation</div>
-                    </div>
-                    <div class="stock-logo">N</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$875.28</div>
-                    <div class="stock-change positive">+$18.42 (+2.15%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$2.16T</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">62.1M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">72.45</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$890.50</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">META</div>
-                        <div class="stock-name">Meta Platforms Inc.</div>
-                    </div>
-                    <div class="stock-logo">M</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$485.33</div>
-                    <div class="stock-change positive">+$7.89 (+1.65%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$1.23T</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">21.4M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">29.87</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$502.75</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stock-card">
-                <div class="stock-header">
-                    <div class="stock-info">
-                        <div class="stock-symbol">NFLX</div>
-                        <div class="stock-name">Netflix Inc.</div>
-                    </div>
-                    <div class="stock-logo">N</div>
-                </div>
-                <div class="stock-price-section">
-                    <div class="stock-price">$612.44</div>
-                    <div class="stock-change positive">+$9.21 (+1.53%)</div>
-                </div>
-                <div class="stock-stats">
-                    <div class="stat">
-                        <div class="stat-label">Market Cap</div>
-                        <div class="stat-value">$264B</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">Volume</div>
-                        <div class="stat-value">5.8M</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">P/E Ratio</div>
-                        <div class="stat-value">48.23</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">52W High</div>
-                        <div class="stat-value">$641.00</div>
-                    </div>
-                </div>
+        <div class="header-stats" id="headerStats" style="display:none;">
+            <div class="stat">
+                <div class="stat-label">Tracked</div>
+                <div class="stat-value" id="statCount">0</div>
             </div>
         </div>
+    </div>
 
-        <!-- Stock Table View -->
-        <div class="table-container hidden" id="tableView">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Symbol</th>
-                        <th>Price</th>
-                        <th>Change</th>
-                        <th>% Change</th>
-                        <th>Market Cap</th>
-                        <th>Volume</th>
-                        <th>P/E Ratio</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">A</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">AAPL</div>
-                                    <div class="symbol-name">Apple Inc.</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$182.45</td>
-                        <td class="positive">+$2.35</td>
-                        <td class="positive">+1.31%</td>
-                        <td>$2.85T</td>
-                        <td>52.4M</td>
-                        <td>28.45</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">M</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">MSFT</div>
-                                    <div class="symbol-name">Microsoft Corporation</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$412.88</td>
-                        <td class="positive">+$5.12</td>
-                        <td class="positive">+1.26%</td>
-                        <td>$3.07T</td>
-                        <td>28.3M</td>
-                        <td>35.82</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">G</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">GOOGL</div>
-                                    <div class="symbol-name">Alphabet Inc.</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$165.32</td>
-                        <td class="negative">-$1.42</td>
-                        <td class="negative">-0.85%</td>
-                        <td>$2.04T</td>
-                        <td>31.2M</td>
-                        <td>24.67</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">A</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">AMZN</div>
-                                    <div class="symbol-name">Amazon.com Inc.</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$178.90</td>
-                        <td class="positive">+$3.21</td>
-                        <td class="positive">+1.83%</td>
-                        <td>$1.85T</td>
-                        <td>45.8M</td>
-                        <td>52.34</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">T</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">TSLA</div>
-                                    <div class="symbol-name">Tesla Inc.</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$248.55</td>
-                        <td class="negative">-$4.32</td>
-                        <td class="negative">-1.71%</td>
-                        <td>$790B</td>
-                        <td>118.5M</td>
-                        <td>68.92</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">N</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">NVDA</div>
-                                    <div class="symbol-name">NVIDIA Corporation</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$875.28</td>
-                        <td class="positive">+$18.42</td>
-                        <td class="positive">+2.15%</td>
-                        <td>$2.16T</td>
-                        <td>62.1M</td>
-                        <td>72.45</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">M</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">META</div>
-                                    <div class="symbol-name">Meta Platforms Inc.</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$485.33</td>
-                        <td class="positive">+$7.89</td>
-                        <td class="positive">+1.65%</td>
-                        <td>$1.23T</td>
-                        <td>21.4M</td>
-                        <td>29.87</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="symbol-cell">
-                                <div class="mini-logo">N</div>
-                                <div class="symbol-info">
-                                    <div class="symbol-ticker">NFLX</div>
-                                    <div class="symbol-name">Netflix Inc.</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>$612.44</td>
-                        <td class="positive">+$9.21</td>
-                        <td class="positive">+1.53%</td>
-                        <td>$264B</td>
-                        <td>5.8M</td>
-                        <td>48.23</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+    <div class="action-bar" id="actionBar" style="display:none;">
+        <a href="data.html" class="btn primary">+ Add stocks</a>
+        <button class="btn" id="loadPricesBtn" onclick="loadAllPrices()">
+            <span class="spinner"></span>
+            <span class="btn-label">&#8635; Load prices</span>
+        </button>
+        <button class="btn danger" onclick="clearAll()">Clear all</button>
+        <span class="price-status" id="priceStatus"></span>
+    </div>
 
-    <script>
-        // View Toggle Functionality
-        const gridViewBtn = document.getElementById('gridViewBtn');
-        const tableViewBtn = document.getElementById('tableViewBtn');
-        const gridView = document.getElementById('gridView');
-        const tableView = document.getElementById('tableView');
+    <div class="filter-tabs" id="filterTabs" style="display:none;"></div>
 
-        gridViewBtn.addEventListener('click', () => {
-            gridViewBtn.classList.add('active');
-            tableViewBtn.classList.remove('active');
-            gridView.classList.remove('hidden');
-            tableView.classList.add('hidden');
+    <div class="view-toggle" id="viewToggle" style="display:none;">
+        <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')">&#9646;&#9646; Grid</button>
+        <button class="view-btn" id="tableViewBtn" onclick="setView('table')">&equiv; Table</button>
+    </div>
+
+    <div id="content"></div>
+</main>
+
+<script>
+    /* ========================================================
+       STORAGE — same key + structure as data.html
+       ======================================================== */
+    var FAV_KEY = 'favoriteStocks';
+    var PRICE_CACHE_KEY = 'stockPriceCache';
+    var ALPHA_KEY = '5YJCCIC4V6BW3M90';
+
+    function getFavorites() {
+        try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+        catch (e) { return []; }
+    }
+    function setFavorites(favs) { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
+
+    function removeFavorite(symbol) {
+        setFavorites(getFavorites().filter(function(f) { return f.symbol !== symbol; }));
+        render();
+    }
+    function clearAll() {
+        if (!confirm('Remove all stocks from your watchlist?')) return;
+        setFavorites([]);
+        sessionStorage.removeItem(PRICE_CACHE_KEY);
+        priceCache = {};
+        render();
+    }
+
+    /* ========================================================
+       SECTOR LOOKUP — sectors aren't in localStorage so we map
+       symbols → sectors here. Anything unrecognized = "Other".
+       ======================================================== */
+    var SECTOR_MAP = {
+        // Defense
+        LMT: 'Defense', NOC: 'Defense', RTX: 'Defense', GD: 'Defense', BA: 'Defense',
+        GE: 'Defense', LHX: 'Defense', KTOS: 'Defense', AVAV: 'Defense', RKLB: 'Defense',
+        HII: 'Defense', TXT: 'Defense', LDOS: 'Defense', PLTR: 'Defense',
+        // Tech
+        AAPL: 'Tech', MSFT: 'Tech', GOOGL: 'Tech', AMZN: 'Tech', META: 'Tech',
+        NVDA: 'Tech', TSLA: 'Tech', AMD: 'Tech', INTC: 'Tech', ORCL: 'Tech',
+        CRM: 'Tech', ADBE: 'Tech', NFLX: 'Tech', AVGO: 'Tech', QCOM: 'Tech', TSM: 'Tech',
+        // Finance
+        JPM: 'Finance', BAC: 'Finance', WFC: 'Finance', GS: 'Finance', MS: 'Finance',
+        C: 'Finance', V: 'Finance', MA: 'Finance', AXP: 'Finance', BLK: 'Finance',
+        // Healthcare
+        JNJ: 'Healthcare', PFE: 'Healthcare', UNH: 'Healthcare', ABBV: 'Healthcare',
+        LLY: 'Healthcare', MRK: 'Healthcare', TMO: 'Healthcare',
+        // Consumer
+        WMT: 'Consumer', COST: 'Consumer', KO: 'Consumer', PEP: 'Consumer', MCD: 'Consumer',
+        NKE: 'Consumer', SBUX: 'Consumer', DIS: 'Consumer', HD: 'Consumer', TGT: 'Consumer',
+        // Energy
+        XOM: 'Energy', CVX: 'Energy', COP: 'Energy', SLB: 'Energy',
+        // Industrial
+        CAT: 'Industrial', DE: 'Industrial', HON: 'Industrial', MMM: 'Industrial', UPS: 'Industrial',
+        // ETF
+        SPY: 'ETF', QQQ: 'ETF', VOO: 'ETF', VTI: 'ETF', DIA: 'ETF', IWM: 'ETF', ITA: 'ETF'
+    };
+    function sectorFor(symbol) { return SECTOR_MAP[symbol] || 'Other'; }
+
+    /* ========================================================
+       UI STATE
+       ======================================================== */
+    var activeSector = 'All';
+    var activeView = 'grid';
+    var searchQuery = '';
+    var priceCache = {};
+
+    // Load price cache from sessionStorage on page load (cleared when tab closes)
+    try {
+        priceCache = JSON.parse(sessionStorage.getItem(PRICE_CACHE_KEY) || '{}');
+    } catch (e) { priceCache = {}; }
+
+    function setView(view) {
+        activeView = view;
+        document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+        document.getElementById('tableViewBtn').classList.toggle('active', view === 'table');
+        render();
+    }
+
+    /* ========================================================
+       PRICE FETCHING — manual button so we don't burn quota
+       on every page load. Staggered to respect rate limits.
+       ======================================================== */
+    async function loadAllPrices() {
+        var favs = getFavorites();
+        if (favs.length === 0) return;
+
+        var btn = document.getElementById('loadPricesBtn');
+        var status = document.getElementById('priceStatus');
+        btn.classList.add('loading');
+        btn.disabled = true;
+        btn.querySelector('.btn-label').textContent = 'Loading…';
+
+        var loaded = 0, errored = 0;
+
+        for (var i = 0; i < favs.length; i++) {
+            var f = favs[i];
+            status.textContent = 'Fetching ' + (i + 1) + ' / ' + favs.length + ' (' + f.symbol + ')…';
+            try {
+                var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + f.symbol + '&apikey=' + ALPHA_KEY;
+                var res = await fetch(url);
+                var data = await res.json();
+
+                if (data['Note'] || data['Information']) {
+                    status.textContent = '⚠ Rate limit hit after ' + loaded + ' tickers. Try again later.';
+                    break;
+                }
+
+                var q = data['Global Quote'];
+                if (q && q['05. price']) {
+                    priceCache[f.symbol] = {
+                        price: parseFloat(q['05. price']),
+                        change: parseFloat(q['09. change']),
+                        changePct: parseFloat((q['10. change percent'] || '0').replace('%', '')),
+                        fetchedAt: Date.now()
+                    };
+                    loaded++;
+                } else {
+                    errored++;
+                }
+            } catch (err) {
+                errored++;
+            }
+            // Brief delay between requests — Alpha Vantage free tier is 5/min
+            if (i < favs.length - 1) await new Promise(function(r) { setTimeout(r, 1200); });
+        }
+
+        sessionStorage.setItem(PRICE_CACHE_KEY, JSON.stringify(priceCache));
+        status.textContent = '✓ Loaded ' + loaded + (errored ? ' · ' + errored + ' failed' : '') + ' · ' + new Date().toLocaleTimeString();
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        btn.querySelector('.btn-label').textContent = '↻ Refresh prices';
+        render();
+    }
+
+    /* ========================================================
+       FORMATTING
+       ======================================================== */
+    function fmt(n) { return Number(n).toFixed(2); }
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, function(c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+    function relativeDate(ts) {
+        if (!ts) return 'Saved';
+        var diff = Date.now() - ts;
+        var days = Math.floor(diff / 86400000);
+        if (days === 0) return 'Added today';
+        if (days === 1) return 'Added yesterday';
+        if (days < 7) return 'Added ' + days + ' days ago';
+        if (days < 30) return 'Added ' + Math.floor(days / 7) + 'w ago';
+        return 'Added ' + new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    /* ========================================================
+       RENDERING
+       ======================================================== */
+    function render() {
+        var allFavs = getFavorites();
+        var content = document.getElementById('content');
+        var stats = document.getElementById('headerStats');
+        var actionBar = document.getElementById('actionBar');
+        var filterTabs = document.getElementById('filterTabs');
+        var viewToggle = document.getElementById('viewToggle');
+
+        // Empty state
+        if (allFavs.length === 0) {
+            stats.style.display = 'none';
+            actionBar.style.display = 'none';
+            filterTabs.style.display = 'none';
+            viewToggle.style.display = 'none';
+            content.innerHTML =
+                '<div class="empty-state">' +
+                    '<div class="empty-icon">&#9734;</div>' +
+                    '<div class="empty-title">Your watchlist is empty</div>' +
+                    '<div class="empty-text">' +
+                        'Head over to the <code>Data</code> tab and click the <span style="color:var(--yellow);">&#9733;</span> next to any ticker to add it here. ' +
+                        'Your watchlist is saved in this browser via localStorage.' +
+                    '</div>' +
+                    '<a href="data.html" class="btn primary">Browse stocks &rarr;</a>' +
+                '</div>';
+            return;
+        }
+
+        stats.style.display = '';
+        actionBar.style.display = '';
+        filterTabs.style.display = '';
+        viewToggle.style.display = '';
+        document.getElementById('statCount').textContent = allFavs.length;
+
+        // Filter tabs — only sectors that exist in favorites
+        var sectorsInFavs = {};
+        allFavs.forEach(function(f) { sectorsInFavs[sectorFor(f.symbol)] = true; });
+        var sectorList = ['All'].concat(Object.keys(sectorsInFavs).sort());
+        if (!sectorsInFavs[activeSector] && activeSector !== 'All') activeSector = 'All';
+
+        filterTabs.innerHTML = sectorList.map(function(s) {
+            return '<button class="filter-tab' + (s === activeSector ? ' active' : '') +
+                   '" onclick="setSector(\'' + s + '\')">' + s + '</button>';
+        }).join('');
+
+        // Apply search + sector filter, then sort by addedAt desc
+        var favs = allFavs.filter(function(f) {
+            var matchesSector = activeSector === 'All' || sectorFor(f.symbol) === activeSector;
+            var q = searchQuery.toLowerCase().trim();
+            var matchesSearch = !q || f.symbol.toLowerCase().includes(q) || (f.name || '').toLowerCase().includes(q);
+            return matchesSector && matchesSearch;
+        });
+        favs.sort(function(a, b) {
+            var at = a.addedAt || 0, bt = b.addedAt || 0;
+            if (at !== bt) return bt - at;
+            return a.symbol.localeCompare(b.symbol);
         });
 
-        tableViewBtn.addEventListener('click', () => {
-            tableViewBtn.classList.add('active');
-            gridViewBtn.classList.remove('active');
-            tableView.classList.remove('hidden');
-            gridView.classList.add('hidden');
-        });
+        if (favs.length === 0) {
+            content.innerHTML =
+                '<div class="empty-state" style="padding:40px 24px;">' +
+                    '<div class="empty-title" style="font-size:16px;">No matches</div>' +
+                    '<div class="empty-text">No stocks in your watchlist match that filter.</div>' +
+                '</div>';
+            return;
+        }
 
-        // Filter Tab Functionality
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        if (activeView === 'grid') {
+            content.innerHTML = '<div class="stocks-grid">' + favs.map(cardHtml).join('') + '</div>';
+        } else {
+            content.innerHTML = tableHtml(favs);
+        }
+    }
 
-        // Stock Card Click (you can link to individual stock pages later)
-        document.querySelectorAll('.stock-card, tbody tr').forEach(card => {
-            card.addEventListener('click', () => {
-                // Future: Navigate to individual stock detail page
-                console.log('Stock clicked - you can create individual stock pages');
-            });
-        });
-    </script>
+    function setSector(s) {
+        activeSector = s;
+        render();
+    }
+
+    function cardHtml(f) {
+        var symbol = escapeHtml(f.symbol);
+        var name = escapeHtml(f.name || '');
+        var sector = sectorFor(f.symbol);
+        var sectorClass = 'sector-' + sector.toLowerCase();
+        var letter = symbol.charAt(0);
+        var safeRemove = symbol.replace(/'/g, "\\'");
+
+        var priceHtml = '<div class="price-placeholder">&middot; Click "Load prices" for live data</div>';
+        var p = priceCache[f.symbol];
+        if (p) {
+            var isUp = p.change >= 0;
+            var sign = isUp ? '+' : '';
+            priceHtml =
+                '<div class="price-value">$' + fmt(p.price) + '</div>' +
+                '<div class="price-change ' + (isUp ? 'up' : 'down') + '">' +
+                    sign + fmt(p.change) + ' (' + sign + fmt(p.changePct) + '%)' +
+                '</div>';
+        }
+
+        return (
+            '<div class="stock-card">' +
+                '<button class="card-remove-btn" title="Remove from watchlist" onclick="removeFavorite(\'' + safeRemove + '\')">&times;</button>' +
+                '<div class="card-header">' +
+                    '<div class="stock-logo">' + letter + '</div>' +
+                    '<div class="stock-info">' +
+                        '<div class="stock-symbol">' + symbol + '</div>' +
+                        '<div class="stock-name">' + name + '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="card-price">' + priceHtml + '</div>' +
+                '<div class="card-meta">' +
+                    '<span class="meta-tag ' + sectorClass + '">' + sector + '</span>' +
+                    '<span class="meta-tag">' + relativeDate(f.addedAt) + '</span>' +
+                '</div>' +
+                '<a href="data.html?symbol=' + encodeURIComponent(f.symbol) + '" class="card-view-btn">View live data &rarr;</a>' +
+            '</div>'
+        );
+    }
+
+    function tableHtml(favs) {
+        var rows = favs.map(function(f) {
+            var symbol = escapeHtml(f.symbol);
+            var name = escapeHtml(f.name || '');
+            var sector = sectorFor(f.symbol);
+            var letter = symbol.charAt(0);
+            var safeRemove = symbol.replace(/'/g, "\\'");
+
+            var priceCol = '<span style="color:var(--muted-2);">—</span>';
+            var changeCol = '<span style="color:var(--muted-2);">—</span>';
+            var p = priceCache[f.symbol];
+            if (p) {
+                var isUp = p.change >= 0;
+                var sign = isUp ? '+' : '';
+                priceCol = '$' + fmt(p.price);
+                changeCol = '<span class="' + (isUp ? 'up' : 'down') + '">' +
+                            sign + fmt(p.change) + ' (' + sign + fmt(p.changePct) + '%)</span>';
+            }
+
+            return (
+                '<tr>' +
+                    '<td>' +
+                        '<div class="symbol-cell">' +
+                            '<div class="mini-logo">' + letter + '</div>' +
+                            '<div>' +
+                                '<div class="table-symbol">' + symbol + '</div>' +
+                                '<div class="table-name">' + name + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td><span class="meta-tag sector-' + sector.toLowerCase() + '">' + sector + '</span></td>' +
+                    '<td class="right">' + priceCol + '</td>' +
+                    '<td class="right">' + changeCol + '</td>' +
+                    '<td>' + relativeDate(f.addedAt) + '</td>' +
+                    '<td>' +
+                        '<div class="table-actions">' +
+                            '<a class="table-action-btn view" href="data.html?symbol=' + encodeURIComponent(f.symbol) + '">View</a>' +
+                            '<button class="table-action-btn remove" onclick="removeFavorite(\'' + safeRemove + '\')">Remove</button>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>'
+            );
+        }).join('');
+
+        return (
+            '<div class="table-container"><table>' +
+                '<thead><tr>' +
+                    '<th>Symbol</th>' +
+                    '<th>Sector</th>' +
+                    '<th class="right">Price</th>' +
+                    '<th class="right">Change</th>' +
+                    '<th>Added</th>' +
+                    '<th class="right">Actions</th>' +
+                '</tr></thead>' +
+                '<tbody>' + rows + '</tbody>' +
+            '</table></div>'
+        );
+    }
+
+    /* ========================================================
+       SEARCH (top nav input)
+       ======================================================== */
+    document.getElementById('navSearch').addEventListener('input', function() {
+        searchQuery = this.value;
+        render();
+    });
+
+    /* ========================================================
+       Cross-tab sync — if data.html (in another tab) toggles a
+       favorite, we re-render here automatically.
+       ======================================================== */
+    window.addEventListener('storage', function(e) {
+        if (e.key === FAV_KEY) render();
+    });
+
+    /* ========================================================
+       INITIAL RENDER
+       ======================================================== */
+    render();
+</script>
 </body>
 </html>
